@@ -1,0 +1,81 @@
+.input-container {
+    position: relative;
+    margin: 50px auto;
+    width: 100%;
+    /* Menggunakan lebar 100% dari kolom Bootstrap */
+    max-width: 100%;
+    /* Membatasi agar tidak lebih lebar dari kolom */
+  }
+  
+  .input-container input[type="text"],
+  .input-container input[type="password"],
+  .input-container textarea {
+    font-size: 16px;
+    width: 100%;
+    /* Input mengisi seluruh lebar container */
+    border: none;
+    border-bottom: 2px solid #ccc;
+    padding: 5px 0;
+    background-color: transparent;
+    outline: none;
+    resize: none;
+    /* Menghindari perubahan ukuran textarea secara manual */
+  }
+  
+  .input-container .label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #ccc;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    padding: 0 5px;
+    /* Menambah padding horizontal agar label tidak terlalu dekat dengan tepi */
+  }
+  
+  .input-container input[type="text"]:focus~.label,
+  .input-container input[type="password"]:focus~.label,
+  .input-container textarea:focus~.label,
+  .input-container input[type="text"]:valid~.label,
+  .input-container input[type="password"]:valid~.label,
+  .input-container textarea:valid~.label {
+    top: -25px;
+    /* Menyesuaikan label lebih tinggi untuk textarea */
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .input-container .underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background-color: #333;
+    transform: scaleX(0);
+    transition: all 0.3s ease;
+  }
+  
+  .input-container input[type="text"]:focus~.underline,
+  .input-container input[type="password"]:focus~.underline,
+  .input-container textarea:focus~.underline,
+  .input-container input[type="text"]:valid~.underline,
+  .input-container input[type="password"]:valid~.underline,
+  .input-container textarea:valid~.underline {
+    transform: scaleX(1);
+  }
+  
+  
+  .logomain {
+    width: 70px;
+    height: 70px;
+  }
+  
+  @import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+  
+  
+  .font {
+    font-family: "PT Serif", serif;
+    font-weight: 500;
+    font-style: normal;
+  }

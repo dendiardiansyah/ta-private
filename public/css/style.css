@@ -1,0 +1,136 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    height: 100%;
+}
+
+h1 {
+    color: #333333;
+}
+
+h2 {
+    color: #666666;
+}
+
+header nav a {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333333;
+}
+
+header nav a:hover {
+    color: #007bff;
+    /* Warna biru saat hover */
+}
+
+/* Spacing di bawah header untuk memberikan ruang */
+header {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Gaya tambahan untuk gambar di bagian utama */
+.image-content img {
+    max-width: 90%;
+    height: auto;
+    border-radius: 10px;
+    /* Rounding corners of the image */
+}
+
+/* Responsive adjustment */
+@media (max-width: 768px) {
+    header nav {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    main .col-md-6 {
+        text-align: center;
+    }
+}
+
+/* From Uiverse.io by vikiWayne */
+
+
+
+/* From Uiverse.io by kennyotsu-monochromia */
+
+.logomain {
+    width: 70px;
+    height: 70px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+
+.font {
+    font-family: "PT Serif", serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+/* From Uiverse.io by Creatlydev */
+.button {
+    line-height: 1;
+    text-decoration: none;
+    display: inline-flex;
+    border: none;
+    cursor: pointer;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: #0e6e36;
+    /* Hijau default */
+    color: #fff;
+    border-radius: 10rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    padding-left: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.button__icon-wrapper {
+    flex-shrink: 0;
+    width: 25px;
+    height: 25px;
+    position: relative;
+    color: #0b4814;
+    /* Hijau terang */
+    background-color: #fff;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    transition: color 0.3s, background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #000;
+    /* Hitam saat hover */
+    transform: scale(1.1);
+    /* Sedikit memperbesar tombol */
+}
+
+.button:hover .button__icon-wrapper {
+    color: #000;
+    /* Hitam pada ikon */
+    background-color: #fff;
+    /* Latar belakang ikon tetap putih */
+}
+
+.button__icon-svg--copy {
+    position: absolute;
+    transform: translate(-150%, 150%);
+}
+
+.button:hover .button__icon-svg:first-child {
+    transition: transform 0.3s ease-in-out;
+    transform: translate(150%, -150%);
+}
+
+.button:hover .button__icon-svg--copy {
+    transition: transform 0.3s ease-in-out 0.1s;
+    transform: translate(0);
+}

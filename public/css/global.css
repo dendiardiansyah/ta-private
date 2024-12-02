@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+body {
+    background-color: white;
+}
+
+.font {
+    font-family: "PT Serif", serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.test {
+    font-size: 2rem;
+    color: #28a745;
+
+}
+
+.title {
+    font-size: 1rem;
+    color: #28a745;
+}
+
+/* From Uiverse.io by cssbuttons-io */
+.c-button {
+    color: #000;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    padding: 0.9em 1.6em;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    z-index: 1;
+    border-radius: 12px;
+    /* Sudut rounded pada tombol */
+}
+
+.c-button--gooey {
+    color: #28a745;
+    /* Warna hijau */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border: 4px solid #28a745;
+    /* Border hijau */
+    border-radius: 12px;
+    /* Sudut rounded pada border */
+    position: relative;
+    transition: all 700ms ease;
+}
+
+.c-button--gooey .c-button__blobs {
+    height: 100%;
+    filter: url(#goo);
+    /* Efek goo */
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: -3px;
+    right: -1px;
+    z-index: -1;
+    border-radius: 12px;
+    /* Sudut rounded pada efek gooey */
+}
+
+.c-button--gooey .c-button__blobs div {
+    background-color: #28a745;
+    /* Warna hijau */
+    width: 34%;
+    height: 100%;
+    border-radius: 50%;
+    /* Sudut rounded pada efek blob */
+    position: absolute;
+    transform: scale(1.4) translateY(125%) translateZ(0);
+    transition: all 700ms ease;
+}
+
+.c-button--gooey .c-button__blobs div:nth-child(1) {
+    left: -5%;
+}
+
+.c-button--gooey .c-button__blobs div:nth-child(2) {
+    left: 30%;
+    transition-delay: 60ms;
+}
+
+.c-button--gooey .c-button__blobs div:nth-child(3) {
+    left: 66%;
+    transition-delay: 25ms;
+}
+
+.c-button--gooey:hover {
+    color: #fff;
+}
+
+.c-button--gooey:hover .c-button__blobs div {
+    transform: scale(1.4) translateY(0) translateZ(0);
+}
+
+/* Pastikan gambar dalam card memiliki ukuran seragam */
+.card-img-top {
+    height: 200px;
+    /* Menetapkan tinggi gambar yang konsisten */
+    object-fit: cover;
+    /* Menyesuaikan gambar dengan ukuran card tanpa distorsi */
+    width: 100%;
+    /* Pastikan gambar memenuhi lebar card */
+    border-bottom: 1px solid #ddd;
+    /* Menambahkan garis pemisah di bawah gambar */
+}
+
+/* Pastikan semua card memiliki tinggi yang sama dan tata letaknya konsisten */
+.card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Menjaga jarak antara judul, deskripsi, dan tombol */
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Tombol dengan tinggi konsisten dan jarak yang cukup */
+.btn-success {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tampilan row pada berita agar tetap teratur */

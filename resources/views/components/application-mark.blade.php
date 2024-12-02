@@ -1,0 +1,1 @@
+<img src="{{ asset('image/logomain.png') }}" alt="Logo Saya" class="h-12 w-auto" />
