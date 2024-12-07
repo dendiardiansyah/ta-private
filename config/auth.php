@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'pelaku_usaha' => [
+            'driver' => 'session',
+            'provider' => 'pelaku_usaha',
+        ],
     ],
 
     /*
@@ -63,6 +67,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+
+        'pelaku_usaha' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_MODEL', App\Models\PelakuUsaha::class),
         ],
 
         // 'users' => [

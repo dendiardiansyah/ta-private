@@ -2,15 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JenisSampah;
 use App\Models\Transaksi;  // Model untuk transaksi
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransaksiController extends Controller
 {
     // Menampilkan form untuk membuat transaksi baru
     public function create()
     {
-        return view('penjemputan'); // Menampilkan form transaksi
+        // Mengambil data jenis sampah
+        $jenisSampah = JenisSampah::all();
+
+
+        // dd($jenisSampah);
+
+        // Mengirim data jenis sampah ke view
+        return view('penjemputan', compact('jenisSampah'));
     }
 
     // Menyimpan transaksi baru ke database
@@ -18,20 +27,102 @@ class TransaksiController extends Controller
     {
         // Validasi data dari form
         $request->validate([
+            'jenis_sampah_id' => 'required|exists:jenis_sampah,jenis_sampah_id', // Validasi jenis_sampah_id dengan primary key
             'alamat_penjemputan' => 'required|string',
             'jumlah' => 'required|numeric|min:1',
             'tanggal_transaksi' => 'required|date',
         ]);
 
         // Membuat transaksi baru
-        $transaksi = Transaksi::create([
-            'pelaku_usaha_id' => null, // Menyimpan pelaku usaha dari pengguna yang login
+        Transaksi::create([
+            'nasabah_id' => Auth::id(),
+            'jenis_sampah_id' => $request->jenis_sampah_id, // Menyimpan jenis sampah yang dipilih
+            'alamat_penjemputan' => $request->alamat_penjemputan,
+            'jumlah' => $request->jumlah,
+            'tanggal_transaksi' => $request->tanggal_transaksi,
+
+        ]);
+
+
+        // Redirect setelah berhasil menyimpan transaksi
+        session()->flash('message', 'Transaksi berhasil dibuat!');
+
+        // Redirect setelah berhasil menyimpan transaksi
+        return redirect()->route('penjemputan.create');
+    }
+
+    // Menampilkan riwayat transaksi penjemputan
+    // Controller TransaksiController
+    public function history()
+    {
+        // Ambil data transaksi dan relasikan dengan data user (nasabah)
+        $transaksis = Transaksi::where('nasabah_id', Auth::id())
+            ->with('user') // Relasi untuk mengambil nama pengguna
+            ->get();
+
+        // Kirim data transaksi ke view
+        return view('riwayat_penjemputan', compact('transaksis'));
+    }
+
+
+
+    // Menampilkan form untuk mengedit transaksi
+    public function edit($transaksi_id)
+    {
+        // Ambil data transaksi yang akan diedit berdasarkan transaksi_id dan nasabah_id
+        $transaksi = Transaksi::where('transaksi_id', $transaksi_id)
+            ->where('nasabah_id', Auth::id())
+            ->firstOrFail();
+
+        // Ambil semua data jenis sampah
+        $jenisSampah = JenisSampah::all();
+
+        // Tampilkan tampilan form edit dengan data transaksi dan jenis sampah
+        return view('edit_penjemputan', compact('transaksi', 'jenisSampah'));
+    }
+
+    public function update(Request $request, $transaksi_id)
+    {
+        // Validasi inputan form
+        $request->validate([
+            'jenis_sampah_id' => 'required|exists:jenis_sampah,jenis_sampah_id',
+            'alamat_penjemputan' => 'required|string',
+            'jumlah' => 'required|numeric|min:1',
+            'tanggal_transaksi' => 'required|date',
+        ]);
+
+        // Ambil data transaksi untuk diperbarui
+        $transaksi = Transaksi::where('transaksi_id', $transaksi_id)
+            ->where('nasabah_id', Auth::id())
+            ->firstOrFail();
+
+        // Update data transaksi
+        $transaksi->update([
+            'jenis_sampah_id' => $request->jenis_sampah_id,
             'alamat_penjemputan' => $request->alamat_penjemputan,
             'jumlah' => $request->jumlah,
             'tanggal_transaksi' => $request->tanggal_transaksi,
         ]);
 
-        // Redirect setelah berhasil menyimpan transaksi
-        return redirect()->route('penjemputan.create')->with('success', 'Transaksi berhasil dibuat!');
+        // Redirect setelah berhasil
+        return redirect()->route('penjemputan.history')->with('success', 'Penjemputan berhasil diperbarui!');
+    }
+
+
+    public function destroy($transaksi_id)
+    {
+        // Cari transaksi berdasarkan transaksi_id dan nasabah_id
+        $transaksi = Transaksi::where('transaksi_id', $transaksi_id)
+            ->where('nasabah_id', Auth::id())
+            ->first();
+
+        // Jika transaksi ditemukan, hapus
+        if ($transaksi) {
+            $transaksi->delete();
+            return redirect()->route('penjemputan.history')->with('success', 'Penjemputan berhasil dihapus!');
+        }
+
+        // Jika transaksi tidak ditemukan, beri respon error
+        return redirect()->route('penjemputan.history')->with('error', 'Penjemputan tidak ditemukan!');
     }
 }

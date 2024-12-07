@@ -9,6 +9,35 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Include Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
+    <style>
+        .custom-navbar {
+            display: flex;
+            align-items: center;
+            /* Align items vertically center */
+            gap: 15px;
+            /* Add spacing between links */
+        }
+
+        .nav-link {
+            color: #000;
+            /* Default color */
+            text-decoration: none;
+            transition: all 0.1s ease;
+            /* Smooth transition for hover effect */
+        }
+
+        .nav-link:hover {
+            color: green;
+            /* Change color to green */
+            transform: scale(1.1);
+            /* Increase size to 110% */
+        }
+
+        .separator {
+            pointer-events: none;
+            /* Disable hover effect for separator */
+        }
+    </style>
 </head>
 
 <body class="bg-light">
@@ -18,13 +47,15 @@
             <div class="">
                 <img class="logomain ms-4" src="{{ asset('image/logomain.png') }}" alt="UpcycleHub Logo">
             </div>
-            <nav class="me-4 font">
+            <nav class="me-4 font custom-navbar">
                 @auth
-                <a href="{{ route('dashboard') }}" class="text-dark me-3">Dashboard</a>
+                <a href="{{ route('dashboard') }}" class="text-dark me-3 nav-link">Dashboard</a>
                 @else
-                <a href="{{ route('login') }}" class="text-dark me-3" style="text-decoration: none;">Login</a>
-                <a href="#" class="text-dark me-3">|</a>
-                <a href="{{ route('register') }}" class="text-dark" style="text-decoration: none;">Register</a>
+                <a href="{{ route('login') }}" class="  nav-link" style="text-decoration: none;">Login</a>
+                <a href="#" class="text-dark ">|</a>
+                <a href="{{ route('register') }}" class=" nav-link" style="text-decoration: none;">Register</a>
+                <a href="#" class="text-dark ">|</a>
+                <a href="{{ route('pelaku_usaha.login') }}" class="nav-link" style="text-decoration: none;">Pelaku Usaha</a>
                 @endauth
             </nav>
         </div>

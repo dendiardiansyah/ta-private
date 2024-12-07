@@ -10,6 +10,7 @@ class Transaksi extends Model
     use HasFactory;
 
     protected $table = 'transaksi';
+    protected $primaryKey = 'transaksi_id';
     public $timestamps = false;
 
     protected $fillable = [
@@ -19,5 +20,14 @@ class Transaksi extends Model
         'alamat_penjemputan',
         'jumlah',
         'tanggal_transaksi',
+        'status',
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'nasabah_id');  // Nasabah_id adalah foreign key yang merujuk ke tabel users
+    }
+    public function jenisSampah()
+    {
+        return $this->belongsTo(JenisSampah::class, 'jenis_sampah_id');
+    }
 }

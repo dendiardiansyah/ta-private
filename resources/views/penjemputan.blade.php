@@ -9,27 +9,24 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    @if(session('success'))
-                    <div class="bg-green-500 text-white p-4 rounded mb-4">
-                        {{ session('success') }}
+                    @if(session()->has('message'))
+                    <div class="bg-green-500 text-black p-4 rounded mb-4">
+                        {{ session('message') }}
                     </div>
                     @endif
 
+
                     <form action="{{ route('transaksi.store') }}" method="POST">
                         @csrf
-                        <div class="mb-4">
-                            <label for="nasabah_id" class="block text-sm font-medium text-gray-700">Nasabah</label>
-                            <input type="text" name="nasabah_id" id="nasabah_id" class="mt-1 block w-full border-gray-300 rounded-md" required>
-                        </div>
 
                         <div class="mb-4">
                             <label for="jenis_sampah_id" class="block text-sm font-medium text-gray-700">Jenis Sampah</label>
-                            <input type="text" name="jenis_sampah_id" id="jenis_sampah_id" class="mt-1 block w-full border-gray-300 rounded-md" required>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="pelaku_usaha_id" class="block text-sm font-medium text-gray-700">Pelaku Usaha (Opsional)</label>
-                            <input type="text" name="pelaku_usaha_id" id="pelaku_usaha_id" class="mt-1 block w-full border-gray-300 rounded-md">
+                            <select name="jenis_sampah_id" id="jenis_sampah_id" class="mt-1 block w-full border-gray-300 rounded-md" required>
+                                <option value="">Pilih Jenis Sampah</option>
+                                @foreach($jenisSampah as $jenis)
+                                <option value="{{ $jenis->jenis_sampah_id }}">{{ $jenis->nama_jenis }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="mb-4">
