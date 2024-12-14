@@ -12,15 +12,25 @@
     <!-- Font Awesome for Eye Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+    <style>
+        .element {
+            background-image: url('image/black.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+
+        }
+    </style>
+
 </head>
 
-<body>
+<body class="element">
     <!-- Full height container -->
     <div class="container-fluid d-flex align-items-center justify-content-center" style="height: 100vh;">
         <div class="form-container shadow p-5 rounded bg-white">
             <h2 class="text-center mb-5 font">Login</h2>
             <div class="d-flex justify-content-center mb-4">
-                <img src="{{ asset('image/logomain.png') }}" alt="Logo" class="logo-img">
+                <a href="/"><img src="{{ asset('image/logomain.png') }}" alt="Logo" class="logo-img"></a>
             </div>
             <!-- Laravel Jetstream Login Form -->
             <form method="POST" action="{{ route('login') }}">
@@ -56,7 +66,7 @@
                 <button type="submit" class="btn btn-success w-100 font">Log in</button>
                 <!-- Sign Up Link -->
                 <div class="mt-3 text-center">
-                    <span class="font">Don't have an account? <a href="{{ route('register') }}" class="font" style="text-decoration: none; color:green;">Sign up</a></span>
+                    <span class="font">Belum Punya Akun? <a href="{{ route('register') }}" class="font" style="text-decoration: none; color:green;">Daftar</a></span>
                 </div>
             </form>
         </div>

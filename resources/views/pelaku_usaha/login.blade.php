@@ -11,10 +11,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for Eye Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .element {
+            background-image: url('/image/black.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+
+        }
+    </style>
 
 </head>
 
-<body>
+<body class="element">
     <!-- Full height container -->
     <div class="container-fluid d-flex align-items-center justify-content-center" style="height: 100vh;">
         <div class="form-container shadow p-5 rounded bg-white">

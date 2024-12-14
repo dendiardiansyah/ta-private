@@ -5,6 +5,7 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\PenjemputanController;
 use App\Http\Controllers\PelakuUsahaController;
+use App\Models\PelakuUsaha;
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,6 +24,8 @@ Route::middleware([
 Route::get('/penjemputan', function () {
     return view('penjemputan');
 })->name('penjemputan');
+
+Route::get('/katalog', [PelakuUsahaController::class, 'showKatalog'])->name('katalog');
 
 // Route untuk transaksi
 Route::middleware([
@@ -52,17 +55,23 @@ Route::middleware([
 });
 
 
-
 Route::prefix('pelaku-usaha')->group(function () {
     // Login dan logout pelaku usaha
     Route::get('/login', [PelakuUsahaController::class, 'showLoginForm'])->name('pelaku_usaha.login');
     Route::post('/login', [PelakuUsahaController::class, 'login']);
-    Route::post('/logout', [PelakuUsahaController::class, 'logout'])->name('pelaku_usaha.logout');
+    Route::get('/transaksi', [PelakuUsahaController::class, 'showTransaksi'])->name('pelaku_usaha.transaksi');
+    Route::put('/transaksi/{transaksi_id}', [PelakuUsahaController::class, 'update'])->name('pelaku_usaha.transaksi.update');
+
 
     // Dashboard pelaku usaha (butuh autentikasi pelaku usaha)
     Route::middleware('auth:pelaku_usaha')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('dashboard_admin');
-        })->name('pelaku_usaha.dashboard');
+        Route::get('/dashboard', [PelakuUsahaController::class, 'showDashboard'])->name('pelaku_usaha.dashboard');
+        Route::get('/pelaku-usaha/katalog', [PelakuUsahaController::class, 'index'])->name('pelaku_usaha.katalog');
+        Route::get('/pelaku-usaha/katalog/edit/{jenis_sampah_id}', [PelakuUsahaController::class, 'editKatalog'])->name('pelaku_usaha.katalog.edit');
+        Route::put('/pelaku-usaha/katalog/edit/{jenis_sampah_id}', [PelakuUsahaController::class, 'updateKatalog'])->name('pelaku_usaha.katalog.update');
+        Route::delete('/pelaku-usaha/katalog/delete/{jenis_sampah_id}', [PelakuUsahaController::class, 'deleteKatalog'])->name('pelaku_usaha.katalog.delete');
+        Route::post('/pelaku-usaha/katalog/store', [PelakuUsahaController::class, 'addKatalog'])->name('pelaku_usaha.katalog.store');
+        Route::get('/pelaku-usaha/katalog/create', [PelakuUsahaController::class, 'createKatalog'])->name('pelaku_usaha.katalog.create');
+        Route::post('/logout', [PelakuUsahaController::class, 'logout'])->name('pelaku_usaha.logout');
     });
 });

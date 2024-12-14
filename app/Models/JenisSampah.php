@@ -17,6 +17,8 @@ class JenisSampah extends Model
     protected $fillable = [
         'nama_jenis',
         'deskripsi',
+        'harga_sampah',
+        'gambar'
     ];
 
     // Jika tabel tidak memiliki kolom timestamps (created_at, updated_at)
