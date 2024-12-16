@@ -20,11 +20,23 @@
     <!-- Styles -->
     @livewireStyles
 </head>
+<style>
+    .element {
+        background-image: url('image/black');
+        /* Gantilah dengan URL gambar Anda */
+        background-size: cover;
+        /* Menyesuaikan ukuran gambar */
+        background-position: center;
+        /* Menempatkan gambar di tengah */
+        background-attachment: fixed;
+        /* Membuat gambar tetap di tempat saat scroll */
+    }
+</style>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased ">
     <x-banner />
 
-    <div class="min-h-screen bg-white">
+    <div class="min-h-screen bg-white ">
         @livewire('navigation-menu')
 
         <!-- Page Heading -->

@@ -56,24 +56,7 @@
                             </div>
 
                             <!-- Nomor Telepon -->
-                            <div class="input-container mb-3">
-                                <input type="text" name="nomor_telepon" id="nomor_telepon" required value="{{ old('nomor_telepon') }}">
-                                <label for="nomor_telepon" class="label font">Nomor Telepon</label>
-                                <div class="underline"></div>
-                                @error('nomor_telepon')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
 
-                            <!-- Alamat Penjemputan -->
-                            <div class="input-container mb-3">
-                                <input type="text" name="alamat_penjemputan" id="alamat_penjemputan" required value="{{ old('alamat_penjemputan') }}">
-                                <label for="alamat_penjemputan" class="label font">Alamat Penjemputan</label>
-                                <div class="underline"></div>
-                                @error('alamat_penjemputan')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
 
                             <!-- Password -->
                             <div class="input-container mb-3">

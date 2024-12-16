@@ -95,7 +95,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $transaksi->user->name }}</td>
                                     <td>{{ \Carbon\Carbon::parse($transaksi->tanggal_transaksi)->format('d-m-Y') }}</td>
-                                    <td>{{ $transaksi->user->alamat_penjemputan }}</td>
+                                    <td>{{ $transaksi->alamat_penjemputan }}</td>
                                     <td>{{ $transaksi->status }}</td>
                                 </tr>
                                 @endforeach

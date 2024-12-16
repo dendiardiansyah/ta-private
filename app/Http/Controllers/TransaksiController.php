@@ -55,14 +55,15 @@ class TransaksiController extends Controller
     // Controller TransaksiController
     public function history()
     {
-        // Ambil data transaksi dan relasikan dengan data user (nasabah)
+        // Ambil data transaksi beserta poin yang terkait
         $transaksis = Transaksi::where('nasabah_id', Auth::id())
-            ->with('user') // Relasi untuk mengambil nama pengguna
+            ->with('user', 'poin') // Menambahkan relasi poin
             ->get();
 
-        // Kirim data transaksi ke view
+        // Kirim data transaksi dan poin ke view
         return view('riwayat_penjemputan', compact('transaksis'));
     }
+
 
 
 

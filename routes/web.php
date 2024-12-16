@@ -3,8 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\PenarikanPoinController;
 use App\Http\Controllers\PenjemputanController;
 use App\Http\Controllers\PelakuUsahaController;
+use App\Http\Controllers\PoinController;
+use App\Http\Controllers\PenarikanController;
 use App\Models\PelakuUsaha;
 
 Route::get('/', function () {
@@ -18,6 +21,9 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', [BeritaController::class, 'index'])->name('dashboard');
+    Route::get('/poin', [PoinController::class, 'index'])->name('poin');
+    Route::get('/penarikan-poin', [PenarikanPoinController::class, 'index'])->name('penarikan');
+    Route::post('/penarikan-poin', [PenarikanPoinController::class, 'store'])->name('penarikan.store');
 });
 
 

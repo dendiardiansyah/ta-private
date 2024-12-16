@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,13 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens;
-
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory;
-    use HasProfilePhoto;
-    use Notifiable;
-    use TwoFactorAuthenticatable;
+    use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -29,8 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'total_poin', // Menyimpan total poin pengguna
     ];
-    
 
     /**
      * The attributes that should be hidden for serialization.
@@ -54,7 +47,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
      * @return array<string, string>
      */
@@ -64,5 +57,17 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Relasi ke tabel penarikan_poin
+    public function penarikanPoin()
+    {
+        return $this->hasMany(PenarikanPoin::class, 'nasabah_id');
+    }
+
+    // Relasi ke tabel poin
+    public function poin()
+    {
+        return $this->hasMany(Poin::class, 'nasabah_id');
     }
 }

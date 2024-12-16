@@ -51,6 +51,7 @@ class PelakuUsahaController extends Controller
 
         // Pastikan mengirimkan variabel ke view
         return view('dashboard_admin', compact('transaksis'));
+        
     }
 
     public function showTransaksi()
@@ -66,6 +67,7 @@ class PelakuUsahaController extends Controller
         // Validasi input
         $request->validate([
             'status' => 'required|in:pending,disetujui,ditolak',
+            'poin' => 'nullable|numeric|min:0', // Validasi poin, jika ada
         ]);
 
         // Cari transaksi berdasarkan ID
@@ -75,26 +77,44 @@ class PelakuUsahaController extends Controller
         $transaksi->status = $request->status;
         $transaksi->save();
 
-        // Jika status transaksi disetujui, masukkan ke tabel transaksi_jenis_sampah
+        // Jika status transaksi disetujui
         if ($request->status == 'disetujui') {
-            $jenisSampahId = $transaksi->jenis_sampah_id;
+            // Ambil jumlah poin dari input form
+            $jumlahPoin = $request->input('poin');
 
-            // Cek jika pasangan transaksi_id dan jenis_sampah_id sudah ada
-            $existing = DB::table('transaksi_jenis_sampah')
-                ->where('transaksi_id', $transaksi->transaksi_id)
-                ->where('jenis_sampah_id', $jenisSampahId)
-                ->first();
+            // Pastikan nilai poin valid
+            if ($jumlahPoin !== null && $jumlahPoin > 0) {
+                // Ambil Nasabah yang terkait dengan transaksi
+                $nasabah = $transaksi->user; // Asumsikan ada relasi 'user' di model Transaksi
 
-            if (!$existing) {
-                // Jika belum ada, insert data baru
-                DB::table('transaksi_jenis_sampah')->insert([
-                    'transaksi_id' => $transaksi->transaksi_id,
-                    'jenis_sampah_id' => $jenisSampahId,
-                ]);
+                // Jika nasabah ditemukan, update total poin
+                if ($nasabah) {
+                    // Tambahkan poin yang baru ke total poin nasabah
+                    $nasabah->total_poin += $jumlahPoin;
+                    $nasabah->save();
+
+                    // Simpan poin yang diberikan di tabel poin
+                    DB::table('poin')->insert([
+                        'nasabah_id' => $nasabah->id,
+                        'jumlah_poin' => $jumlahPoin,
+                        'transaksi_id' => $transaksi->transaksi_id,
+                        'tanggal_diberikan' => now(),
+                    ]);
+                } else {
+                    // Tangani kasus jika nasabah tidak ditemukan
+                    session()->flash('status', 'Nasabah tidak ditemukan.');
+                    return redirect()->route('pelaku_usaha.transaksi')
+                        ->with('error', 'Nasabah tidak ditemukan.');
+                }
+            } else {
+                // Tangani kasus jika poin tidak valid
+                session()->flash('status', 'Jumlah poin tidak valid.');
+                return redirect()->route('pelaku_usaha.transaksi')
+                    ->with('error', 'Jumlah poin tidak valid.');
             }
         }
 
-        // Menyimpan status dan mengarahkan kembali dengan pesan sukses
+        // Mengarahkan kembali dengan pesan sukses
         session()->flash('status', 'Transaksi berhasil diperbarui!');
         return redirect()->route('pelaku_usaha.transaksi')
             ->with('success', 'Status transaksi berhasil diperbarui.');

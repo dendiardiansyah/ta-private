@@ -1,6 +1,8 @@
 <x-app-layout>
     <style>
-
+        .gold {
+            color: #FFD700;
+        }
     </style>
     <div class="container">
         <div class="row d-flex align-items-center">
@@ -8,10 +10,19 @@
                 <img src="{{ asset('image/logodash.png') }}" alt="" class="img-fluid">
             </div>
             <div class="col-md-4">
-                <p class="font fw-bold">Halloo Selamat Datang, {{ Auth::user()->name }}!</p>
+                <p class="font fw-bold" style="color: #607c3c;">Halloo Selamat Datang, {{ Auth::user()->name }}!</p>
                 <h1>
-                    <p class="font fw-bold" style="font-size:40px;">Total Poin Anda <span class="text-success">{{ Auth::user()->total_poin }}</span></p>
+                    <p class="font fw-bold" style="font-size:40px;">
+                        Total Poin Anda
+                        <span class=" d-flex align-items-center gold">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 30px; height: 30px; margin-left: 10px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                            <span class="text-success">{{ Auth::user()->total_poin }}</span>
+                        </span>
+                    </p>
                 </h1>
+
                 <c-button class="c-button c-button--gooey mt-3" onclick="window.location.href='{{ route('penjemputan') }}'">
                     Mulai Sekarang
                     <div class="c-button__blobs">

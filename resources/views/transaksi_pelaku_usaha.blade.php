@@ -23,7 +23,6 @@
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
-
     }
 </style>
 
@@ -87,18 +86,26 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $transaksi->user->name ?? 'Tidak Ditemukan' }}</td>
                                     <td>{{ $transaksi->jenisSampah->nama_jenis ?? 'Tidak Ditemukan' }}</td>
-                                    <td>{{ $transaksi->jumlah }}</td>
+                                    <td>{{ $transaksi->jumlah }} kg</td>
                                     <td>
-                                        <!-- Form untuk mengupdate status -->
+                                        <!-- Form untuk mengupdate status dan poin -->
                                         <form action="{{ route('pelaku_usaha.transaksi.update', $transaksi->transaksi_id) }}" method="POST">
                                             @csrf
                                             @method('PUT')
-                                            <div class="input-group">
-                                                <select name="status" class="form-control">
+                                            <div class="input-group mb-2">
+                                                <!-- Dropdown Status -->
+                                                <select name="status" class="form-control status-dropdown" data-id="{{ $transaksi->transaksi_id }}">
                                                     <option value="pending" {{ $transaksi->status == 'pending' ? 'selected' : '' }}>pending</option>
                                                     <option value="disetujui" {{ $transaksi->status == 'disetujui' ? 'selected' : '' }}>disetujui</option>
                                                     <option value="ditolak" {{ $transaksi->status == 'ditolak' ? 'selected' : '' }}>ditolak</option>
                                                 </select>
+
+                                                <!-- Input Poin -->
+                                                <input type="number" name="poin" class="form-control poin-input" placeholder="Jumlah Poin"
+                                                    id="poin-{{ $transaksi->transaksi_id }}"
+                                                    {{ $transaksi->status != 'disetujui' ? 'disabled' : '' }} />
+
+                                                <!-- Tombol Submit -->
                                                 <button type="submit" class="btn btn-outline-success">Update</button>
                                             </div>
                                         </form>
@@ -125,6 +132,31 @@
         });
     </script>
     @endif
+
+    <script>
+        // Mengaktifkan atau menonaktifkan input poin berdasarkan pilihan status
+        document.querySelectorAll('.status-dropdown').forEach(function(dropdown) {
+            const transaksiId = dropdown.dataset.id;
+            const poinInput = document.getElementById(`poin-${transaksiId}`);
+
+            dropdown.addEventListener('change', function() {
+                if (this.value === 'disetujui') {
+                    poinInput.removeAttribute('disabled'); // Aktifkan input poin
+                } else {
+                    poinInput.setAttribute('disabled', 'disabled'); // Nonaktifkan input poin
+                    poinInput.value = ''; // Kosongkan input poin
+                }
+            });
+
+            // Set kondisi awal berdasarkan status yang sudah ada
+            if (dropdown.value === 'disetujui') {
+                poinInput.removeAttribute('disabled');
+            } else {
+                poinInput.setAttribute('disabled', 'disabled');
+                poinInput.value = ''; // Kosongkan input poin jika tidak disetujui
+            }
+        });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

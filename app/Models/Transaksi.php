@@ -30,4 +30,9 @@ class Transaksi extends Model
     {
         return $this->belongsTo(JenisSampah::class, 'jenis_sampah_id');
     }
+    public function poin()
+    {
+        return $this->hasMany(Poin::class, 'transaksi_id', 'transaksi_id');
+    }
+    
 }
