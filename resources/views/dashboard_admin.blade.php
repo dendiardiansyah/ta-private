@@ -10,15 +10,12 @@
 <style>
     .navbar-brand img {
         width: 30px;
-        /* Adjust the size of the logo */
         height: auto;
         margin-right: 10px;
-        /* Spacing between logo and text */
     }
 </style>
 
 <body>
-
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
         <div class="container-fluid">
@@ -52,7 +49,6 @@
         </div>
     </nav>
 
-
     <!-- Main Content -->
     <div class="container mt-4">
         <div class="row justify-content-center">
@@ -64,13 +60,14 @@
                     </div>
                     <div class="card-body">
                         <p>Halo, {{ auth('pelaku_usaha')->user()->nama }}! Anda berhasil login sebagai Admin Pelaku Usaha.</p>
-
                     </div>
                 </div>
 
-
-                <div>
-                    <canvas id="myChart"></canvas>
+                <!-- Chart Section -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <canvas id="myChart"></canvas>
+                    </div>
                 </div>
 
                 <!-- Data Penjemputan Table -->
@@ -90,17 +87,26 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($transaksis as $transaksi)
+                                @forelse($transaksis as $transaksi)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ ($transaksis->currentPage() - 1) * $transaksis->perPage() + $loop->iteration }}</td>
                                     <td>{{ $transaksi->user->name }}</td>
                                     <td>{{ \Carbon\Carbon::parse($transaksi->tanggal_transaksi)->format('d-m-Y') }}</td>
                                     <td>{{ $transaksi->alamat_penjemputan }}</td>
                                     <td>{{ $transaksi->status }}</td>
                                 </tr>
-                                @endforeach
+                                @empty
+                                <tr>
+                                    <td colspan="5" class="text-center">Tidak ada data tersedia.</td>
+                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
+
+                        <!-- Pagination Links -->
+                        <div class="d-flex justify-content-center">
+                            {{ $transaksis->links() }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,6 +117,7 @@
     <form id="logout-form" action="{{ route('pelaku_usaha.logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const ctx = document.getElementById('myChart');
@@ -120,28 +127,25 @@
             data: {
                 labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
                 datasets: [{
-                    label: 'Data penjemputan',
-                    data: [12, 19, 3, 5, 2, 3],
-                    borderWidth: 1, // Perbaiki di sini dengan menghapus koma ganda
+                    label: 'Data Penjemputan',
+                    data: [12, 19, 3, 5, 2, 3.8],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(255, 205, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
                         'rgba(153, 102, 255, 0.2)',
-                        'rgba(201, 203, 207, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
                     ],
                     borderColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 159, 64)',
-                        'rgb(255, 205, 86)',
-                        'rgb(75, 192, 192)',
-                        'rgb(54, 162, 235)',
-                        'rgb(153, 102, 255)',
-                        'rgb(201, 203, 207)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
                     ],
-                    borderWidth: 1 // Perbaiki di sini dengan menghapus koma ganda
+                    borderWidth: 1
                 }]
             },
             options: {
@@ -153,9 +157,7 @@
             }
         });
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>

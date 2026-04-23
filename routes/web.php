@@ -65,8 +65,7 @@ Route::prefix('pelaku-usaha')->group(function () {
     // Login dan logout pelaku usaha
     Route::get('/login', [PelakuUsahaController::class, 'showLoginForm'])->name('pelaku_usaha.login');
     Route::post('/login', [PelakuUsahaController::class, 'login']);
-    Route::get('/transaksi', [PelakuUsahaController::class, 'showTransaksi'])->name('pelaku_usaha.transaksi');
-    Route::put('/transaksi/{transaksi_id}', [PelakuUsahaController::class, 'update'])->name('pelaku_usaha.transaksi.update');
+
 
 
     // Dashboard pelaku usaha (butuh autentikasi pelaku usaha)
@@ -79,5 +78,7 @@ Route::prefix('pelaku-usaha')->group(function () {
         Route::post('/pelaku-usaha/katalog/store', [PelakuUsahaController::class, 'addKatalog'])->name('pelaku_usaha.katalog.store');
         Route::get('/pelaku-usaha/katalog/create', [PelakuUsahaController::class, 'createKatalog'])->name('pelaku_usaha.katalog.create');
         Route::post('/logout', [PelakuUsahaController::class, 'logout'])->name('pelaku_usaha.logout');
+        Route::get('/transaksi', [PelakuUsahaController::class, 'showTransaksi'])->name('pelaku_usaha.transaksi');
+        Route::put('/transaksi/{transaksi_id}', [PelakuUsahaController::class, 'update'])->name('pelaku_usaha.transaksi.update');
     });
 });
