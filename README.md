@@ -1,66 +1,169 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# TA Private - Laravel Project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This project runs with Docker for local development.
 
-## About Laravel
+## Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Laravel 11 (PHP 8.2)
+- Nginx
+- MySQL 8 (`bank_sampah`)
+- phpMyAdmin
+- Node 20 + Vite
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Docker Desktop (macOS/Windows/Linux)
+- Docker Compose v2 (included in Docker Desktop)
+- Git
 
-## Learning Laravel
+> macOS: enable VirtioFS in Docker Desktop for better bind mount performance.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Windows (Laragon) Quick Notes
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- Stop Laragon services (Apache/Nginx/MySQL) first to avoid port conflicts.
+- Use PowerShell equivalent commands:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```powershell
+Copy-Item .env.example .env
+```
 
-## Laravel Sponsors
+- `WWWUSER` / `WWWGROUP` are mainly for Unix/macOS ownership mapping. On Windows + Docker Desktop, you can keep defaults from `docker-compose.yml`.
+- If using WSL2 for development, run the macOS/Linux UID/GID step from inside WSL:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+echo "WWWUSER=$(id -u)" >> .env
+echo "WWWGROUP=$(id -g)" >> .env
+```
 
-### Premium Partners
+## Quick Start
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+1. Clone repository
 
-## Contributing
+```bash
+git clone <your-repo-url>
+cd ta-private
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+2. Create `.env`
 
-## Code of Conduct
+```bash
+cp .env.example .env
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3. Set local UID/GID (important so generated files are not owned by root)
 
-## Security Vulnerabilities
+```bash
+echo "WWWUSER=$(id -u)" >> .env
+echo "WWWGROUP=$(id -g)" >> .env
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. Update `.env` database + app URL values
 
-## License
+```dotenv
+APP_URL=http://localhost:8000
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=bank_sampah
+DB_USERNAME=laravel
+DB_PASSWORD=<your_database_password>
+
+CACHE_STORE=database
+SESSION_DRIVER=database
+QUEUE_CONNECTION=database
+
+# Used by docker-compose for MySQL root account
+DB_ROOT_PASSWORD=<your_root_password>
+```
+
+5. Build image + start core services
+
+```bash
+docker compose up -d --build app web db phpmyadmin
+```
+
+6. Install PHP dependencies (first run)
+
+```bash
+docker compose exec app composer install
+```
+
+7. Generate key and run migrations
+
+```bash
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate
+```
+
+8. Run frontend dev server (recommended before opening app)
+
+```bash
+docker compose up -d node
+docker compose logs -f node
+```
+
+Wait until Vite logs show `VITE ... ready`, then open the app.
+
+## Access URLs
+
+- App: http://localhost:8000
+- phpMyAdmin: http://localhost:8080
+	- Server: `db`
+	- Username: `laravel`
+	- Password: `<your_database_password>`
+- Vite: http://localhost:5173
+
+## Useful Commands
+
+```bash
+# Start all services
+docker compose up -d
+
+# Stop all services
+docker compose down
+
+# Stop and remove volumes (WARNING: delete MySQL data)
+docker compose down -v
+
+# Open app container shell
+docker compose exec app bash
+
+# Run Artisan command
+docker compose exec app php artisan <command>
+
+# Restart PHP + Nginx (quick fix if rendering is odd)
+docker compose restart app web
+
+# Start/stop only Vite
+docker compose up -d node
+docker compose stop node
+```
+
+## Common Issues
+
+- `docker compose up --build` fails right away:
+	- Ensure Docker Desktop is running.
+	- Ensure `.env` exists.
+	- Check logs: `docker compose logs --tail=200`.
+
+- Permission denied on `storage` or `bootstrap/cache`:
+	- Ensure `WWWUSER` and `WWWGROUP` are set in `.env`.
+	- Rebuild app image: `docker compose build --no-cache app`.
+
+- Frontend hot reload not detecting file changes on macOS:
+	- Vite polling is already enabled in `docker-compose.yml` for the `node` service.
+
+- Accidentally ran `php artisan serve` in container:
+	- Do not use it in this stack (we already use Nginx + PHP-FPM).
+	- Recover with:
+
+```bash
+docker compose restart app web
+docker compose up -d node
+```
+
+## Notes
+
+- MySQL data is persistent in named volume `db_data`.
+- Database `bank_sampah` is created automatically on first MySQL initialization.

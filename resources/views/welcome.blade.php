@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UpcycleHub</title>
-    <!-- Include Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <!-- Include Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
     <style>
@@ -98,8 +97,6 @@
     </div>
     </div>
 
-    <!-- Include Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
