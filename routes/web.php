@@ -21,6 +21,7 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', [BeritaController::class, 'index'])->name('dashboard');
+    Route::get('/image-proxy', [BeritaController::class, 'imageProxy'])->name('image.proxy');
     Route::get('/poin', [PoinController::class, 'index'])->name('poin');
     Route::get('/penarikan-poin', [PenarikanPoinController::class, 'index'])->name('penarikan');
     Route::post('/penarikan-poin', [PenarikanPoinController::class, 'store'])->name('penarikan.store');
@@ -32,6 +33,7 @@ Route::get('/penjemputan', function () {
 })->name('penjemputan');
 
 Route::get('/katalog', [PelakuUsahaController::class, 'showKatalog'])->name('katalog');
+
 
 // Route untuk transaksi
 Route::middleware([

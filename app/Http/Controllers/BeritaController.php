@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class BeritaController extends Controller
@@ -18,12 +17,17 @@ class BeritaController extends Controller
 
         // Ambil artikel yang memiliki gambar dan batasi hanya 8 artikel
         $articles = collect($response->json()['articles'] ?? [])
-            ->filter(function ($article) {
-                return !empty($article['urlToImage']);
+            ->filter(fn($a) => !empty($a['urlToImage']))
+            ->take(8)
+            ->map(function ($article) {
+                $encoded = urlencode($article['urlToImage']);
+                $article['urlToImage'] = "https://images.weserv.nl/?url={$encoded}&w=600&h=400&fit=cover";
+                return $article;
             })
-            ->take(8) // Ambil hanya 8 artikel (2 baris x 4 artikel per baris)
-            ->values(); // Reindex array setelah filter
+            ->values();
 
         return view('dashboard', compact('articles'));
     }
+
+
 }
