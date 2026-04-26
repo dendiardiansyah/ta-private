@@ -1,5 +1,15 @@
 <x-app-layout>
     <style>
+        .section-screen {
+            min-height: calc(100vh - 64px);
+            /* Dikurangi tinggi navbar (16 rem pada tailwind / ~64px) */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
         .gold {
             color: #FFD700;
         }
@@ -99,118 +109,119 @@
         .c-button:hover .c-button__blobs div {
             transform: translateY(0) scale(1.2);
         }
+
+        .video-wrapper {
+            border: 5px solid #28a745;
+            border-radius: 10px;
+            padding: 10px;
+            width: 100%;
+        }
     </style>
+
     <div class="container">
-        <div class="row d-flex align-items-center">
-            <div class="col-md-4">
-                <img src="{{ asset('image/logodash.png') }}" alt="" class="img-fluid">
-            </div>
-            <div class="col-md-4">
-                <p class="font fw-bold" style="color: #607c3c;">Halloo Selamat Datang, {{ Auth::user()->name }}!</p>
-                <h1>
-                    <p class="font fw-bold" style="font-size:40px;">
-                        Total Poin Anda
-                        <span class=" d-flex align-items-center gold">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" style="width: 30px; height: 30px; margin-left: 10px;">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>
-                            <span class="text-success">{{ Auth::user()->total_poin }}</span>
-                        </span>
-                    </p>
-                </h1>
+        <!-- Welcoming Section -->
+        <div class="section-screen">
+            <div class="row w-100 d-flex align-items-center justify-content-center mx-auto">
+                <div class="col-md-5 mb-5 mb-md-0 text-center">
+                    <img src="{{ asset('image/logodash.png') }}" alt="" class="img-fluid"
+                        style="max-height: 400px; object-fit: contain;">
+                </div>
+                <div class="col-md-7 text-center text-md-start">
+                    <p class="font fw-bold mb-2" style="color: #607c3c; font-size: clamp(1rem, 2vw, 1.25rem);">Halloo
+                        Selamat Datang, {{ Auth::user()->name }}!</p>
+                    <h1 class="mb-4">
+                        <div class="font fw-bold d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-start"
+                            style="font-size: clamp(28px, 4vw, 40px);">
+                            <span class="me-0 me-md-3">Total Poin Anda</span>
+                            <span class="d-flex align-items-center gold mt-2 mt-md-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor"
+                                    style="width: 36px; height: 36px; margin-right: 8px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                                <span class="text-success">{{ Auth::user()->total_poin }}</span>
+                            </span>
+                        </div>
+                    </h1>
 
-                <button class="c-button mt-3" onclick="window.location.href='{{ route('penjemputan') }}'">
-                    Mulai Sekarang
-                    <div class="c-button__blobs">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-                </button>
+                    <button class="c-button mt-3" onclick="window.location.href='{{ route('penjemputan') }}'">
+                        Mulai Sekarang
+                        <div class="c-button__blobs">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </button>
 
-                <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute; width:0; height:0;">
-                    <defs>
-                        <filter id="goo">
-                            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-                            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  
-                        0 1 0 0 0  
-                        0 0 1 0 0  
-                        0 0 0 18 -7" result="goo" />
-                            <feBlend in="SourceGraphic" in2="goo" />
-                        </filter>
-                    </defs>
-                </svg>
+                    <svg class="d-none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <filter id="goo">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                                <feColorMatrix in="blur" mode="matrix"
+                                    values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+                                <feBlend in="SourceGraphic" in2="goo" />
+                            </filter>
+                        </defs>
+                    </svg>
+                </div>
             </div>
         </div>
 
-        <div class="video-section mt-5 ">
-            <h2 class="text-center mb-4 text-success test" style="font-size: 40px;">UpcycleHub</h2>
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="video-wrapper">
-                        <video width="100%" controls autoplay muted>
-                            <source src="{{ asset('image/banksampah.mp4') }}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
+        <!-- Video Section -->
+        <div class="section-screen">
+            <div class="w-100">
+                <h2 class="text-center mb-4 text-success test fw-bold" style="font-size: clamp(28px, 5vw, 40px);">
+                    UpcycleHub</h2>
+                <div class="row justify-content-center mx-0">
+                    <div class="col-12 col-md-10 col-lg-8 px-0">
+                        <div class="video-wrapper">
+                            <video width="100%" controls autoplay muted style="border-radius: 5px;">
+                                <source src="{{ asset('image/banksampah.mp4') }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Berita Section -->
-        <div class="news-section mt-5">
-            <h2 class="text-center mb-4 text-success fw-bold">
-                Berita Terkini
-            </h2>
+        <div class="section-screen justify-content-start flex-md-column justify-content-md-center">
+            <div class="w-100">
+                <h2 class="text-center mb-5 text-success fw-bold" style="font-size: clamp(24px, 4vw, 36px);">
+                    Berita Terkini
+                </h2>
 
-            <div class="row">
-                @foreach ($articles as $index => $article)
-                    <div class="col-md-3 mb-4">
-                        <div class="card news-card h-100 d-flex flex-column">
+                <div class="row justify-content-center">
+                    @foreach ($articles as $index => $article)
+                        <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                            <div class="card news-card h-100 d-flex flex-column">
 
-                            <img src="{{ $article['urlToImage'] ?? asset('image/default-news.jpg') }}"
-                                class="card-img-top news-image" 
-                                alt="News Image"
-                                onerror="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpTejOwOn7QfCbTDuYRwG0bbe-BaK9ljkKKw&s"
-                                >
+                                <img src="{{ $article['urlToImage'] ?? asset('image/default-news.jpg') }}"
+                                    class="card-img-top news-image" alt="News Image"
+                                    onerror="this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpTejOwOn7QfCbTDuYRwG0bbe-BaK9ljkKKw&s';">
 
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title news-title">
-                                    {{ $article['title'] }}
-                                </h5>
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title news-title">
+                                        {{ $article['title'] }}
+                                    </h5>
 
-                                <p class="card-text news-text">
-                                    {{ Str::limit($article['description'], 100) }}
-                                </p>
+                                    <p class="card-text news-text mb-4 mt-2">
+                                        {{ Str::limit($article['description'], 100) }}
+                                    </p>
 
-                                <a href="{{ $article['url'] }}" target="_blank" class="btn btn-success mt-auto news-btn">
-                                    Baca Selengkapnya
-                                </a>
+                                    <a href="{{ $article['url'] }}" target="_blank"
+                                        class="btn btn-success mt-auto news-btn">
+                                        Baca Selengkapnya
+                                    </a>
+                                </div>
+
                             </div>
-
                         </div>
-                    </div>
-
-                    @if (($index + 1) % 4 === 0 && $index + 1 !== count($articles))
-                        </div>
-                        <div class="row">
-                    @endif
-                @endforeach
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- CSS untuk Border Hijau pada Video -->
-    <style>
-        .video-wrapper {
-            border: 5px solid #28a745;
-            /* Border hijau */
-            border-radius: 10px;
-            /* Menambahkan border radius (opsional) */
-            padding: 10px;
-            /* Memberikan jarak antara video dan border */
-        }
-    </style>
 </x-app-layout>
