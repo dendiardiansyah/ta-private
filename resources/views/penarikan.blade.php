@@ -1,137 +1,160 @@
 <x-app-layout>
     <style>
-        
-        .svg-wrapper-1 {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .withdraw-page {
+            background: linear-gradient(180deg, #f6fff9 0%, #ffffff 100%);
+            border-radius: 24px;
+            padding: 1.5rem;
         }
 
-        .svg-wrapper {
-            animation: fly-1 0.6s ease-in-out infinite alternate;
+        .hero-card {
+            border: 0;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #1f9d55 0%, #6ccf8a 100%);
+            color: #fff;
+            box-shadow: 0 14px 36px rgba(25, 135, 84, .25);
         }
 
-        button:hover .svg-wrapper {
-            animation: fly-1 0.6s ease-in-out infinite alternate;
+        .soft-card {
+            border: 0;
+            border-radius: 18px;
+            box-shadow: 0 8px 22px rgba(16, 24, 40, .08);
         }
 
-        button:hover svg {
-            transform: translateX(1.2em) rotate(45deg) scale(1.1);
+        .table thead th {
+            background: #198754;
+            color: #fff;
+            border-bottom: 0;
         }
 
-        button:hover span {
-            transform: translateX(5em);
+        .chip {
+            border-radius: 999px;
+            padding: .3rem .8rem;
+            font-size: .8rem;
+            font-weight: 600;
+            display: inline-block;
         }
 
-        button:active {
-            transform: scale(0.95);
+        .chip-warning {
+            background: #fff3cd;
+            color: #856404;
         }
 
-        @keyframes fly-1 {
-            from {
-                transform: translateY(0.1em);
-            }
+        .chip-success {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
 
-            to {
-                transform: translateY(-0.1em);
-            }
+        .chip-secondary {
+            background: #e9ecef;
+            color: #495057;
         }
     </style>
-    <div class="container my-5">
-        <!-- Judul Halaman -->
-        <h1 class="text-center text-success fw-bold mb-4">Riwayat Penarikan Poin</h1>
 
-        <!-- Alert Sukses atau Error -->
+    <div class="container my-5">
         @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
-            <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+            <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         @elseif (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+            <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         @endif
 
-        <!-- Total Poin -->
-        <div class="card shadow-lg border-0 mb-4" style="background: linear-gradient(135deg, #6ab04c, #b8e994); color: white;">
-            <div class="card-body text-center">
-                <h3>Total Poin Anda</h3>
-                <h1 class="fw-bold display-4">{{ Auth::user()->total_poin }}</h1>
-                <p class="mb-0">Kumpulkan lebih banyak poin dari penukaran sampah Anda!</p>
+        <div class="withdraw-page">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+                <div>
+                    <h2 class="fw-bold text-success mb-1">Penarikan Poin</h2>
+                    <p class="text-muted mb-0">Kelola penukaran poin Anda dengan tampilan yang lebih ringkas.</p>
+                </div>
             </div>
-        </div>
 
-        <!-- Form Penarikan Poin -->
-        <div class="card shadow-sm border-0 mb-4 mx-auto" style="max-width: 400px;">
-            <div class="card-header bg-success text-white text-center">
-                <h4 class="mb-0">Ajukan Penarikan Poin</h4>
-            </div>
-            <div class="card-body p-3">
-                <form action="{{ route('penarikan') }}" method="POST">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="jumlahPoin" class="form-label fw-semibold">Jumlah Poin</label>
-                        <input type="number" name="jumlah_poin" id="jumlahPoin" class="form-control rounded-pill" placeholder="Masukkan jumlah poin" required>
-                        @error('jumlah_poin')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                    <button type="submit" class="btn fw-bold" style="font-family: inherit; font-size: 16px; background: #28a745; color: white; padding: 0.5em 1em; display: flex; align-items: center; border: none; border-radius: 16px; overflow: hidden; transition: all 0.2s; cursor: pointer; max-width: 200px; margin: 0 auto;">
-                        <div class="svg-wrapper-1">
-                            <div class="svg-wrapper">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                    <path fill="none" d="M0 0h24v24H0z"></path>
-                                    <path fill="currentColor" d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"></path>
-                                </svg>
-                            </div>
+            <div class="row g-4 mb-4">
+                <div class="col-lg-7">
+                    <div class="card hero-card h-100">
+                        <div class="card-body p-4 p-md-5">
+                            <p class="mb-2 opacity-75">Total Poin Anda</p>
+                            <h1 class="display-4 fw-bold mb-2">
+                                {{ number_format(Auth::user()->total_poin, 0, ',', '.') }}</h1>
+                            <p class="mb-0 opacity-75">Semakin banyak transaksi, semakin besar poin yang bisa ditarik.
+                            </p>
                         </div>
-                        <span>Ajukan</span>
-                    </button>
+                    </div>
+                </div>
 
+                <div class="col-lg-5">
+                    <div class="card soft-card h-100">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-3">Ajukan Penarikan</h5>
+                            <form action="{{ route('penarikan.store') }}" method="POST" class="d-grid gap-3">
+                                @csrf
+                                <div>
+                                    <label for="jumlahPoin" class="form-label fw-semibold">Jumlah Poin</label>
+                                    <input type="number" name="jumlah_poin" id="jumlahPoin" class="form-control"
+                                        placeholder="Contoh: 500" min="100" value="{{ old('jumlah_poin') }}" required>
+                                    @error('jumlah_poin')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
 
-                </form>
+                                <button type="submit" class="btn btn-success fw-semibold">
+                                    Ajukan Penarikan
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Tabel Riwayat Penarikan -->
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-success text-white text-center">
-                <h4 class="mb-0">Riwayat Penarikan Poin</h4>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover mb-0">
-                        <thead class="bg-success text-white">
-                            <tr>
-                                <th>#</th>
-                                <th>Tanggal Penarikan</th>
-                                <th>Jumlah Poin</th>
-                                <th>Jumlah Uang</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($penarikanPoin as $index => $penarikan)
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ \Carbon\Carbon::parse($penarikan->created_at)->format('d-m-Y H:i') }}</td>
-                                <td class="text-success fw-bold">{{ $penarikan->jumlah_poin }}</td>
-                                <td>Rp {{ number_format($penarikan->jumlah_uang, 0, ',', '.') }}</td>
-                                <td>
-                                    <span class="badge bg-{{ $penarikan->status_penarikan === 'diproses' ? 'warning' : ($penarikan->status_penarikan === 'berhasil' ? 'success' : 'danger') }}">
-                                        {{ ucfirst($penarikan->status_penarikan) }}
-                                    </span>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="5" class="text-center text-muted py-4">Belum ada riwayat penarikan poin.</td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+            <div class="card soft-card">
+                <div class="card-body p-0">
+                    <div class="p-4 pb-2">
+                        <h5 class="fw-bold mb-1">Riwayat Penarikan Poin</h5>
+                        <p class="text-muted mb-0">Daftar pengajuan penarikan poin Anda.</p>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tanggal</th>
+                                    <th>Poin</th>
+                                    <th>Nominal</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($penarikanPoin as $index => $penarikan)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ optional($penarikan->created_at)->format('d-m-Y H:i') }}</td>
+                                        <td class="fw-bold text-success">
+                                            {{ number_format($penarikan->jumlah_poin, 0, ',', '.') }}</td>
+                                        <td>Rp {{ number_format($penarikan->jumlah_uang, 0, ',', '.') }}</td>
+                                        <td>
+                                            @if ($penarikan->status_penarikan === 'diproses')
+                                                <span class="chip chip-warning">Diproses</span>
+                                            @elseif ($penarikan->status_penarikan === 'selesai' || $penarikan->status_penarikan === 'berhasil')
+                                                <span
+                                                    class="chip chip-success">{{ ucfirst($penarikan->status_penarikan) }}</span>
+                                            @else
+                                                <span
+                                                    class="chip chip-secondary">{{ ucfirst($penarikan->status_penarikan) }}</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted py-4">Belum ada riwayat penarikan
+                                            poin.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -139,35 +162,33 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @if (session('success'))
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: '{{ session('
-                success ') }}',
-                confirmButtonColor: '#28a745',
-                timer: 3000,
-                timerProgressBar: true,
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: @json(session('success')),
+                    confirmButtonColor: '#28a745',
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
             });
-        });
-    </script>
+        </script>
     @endif
 
     @if (session('error'))
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal!',
-                text: '{{ session('
-                error ') }}',
-                confirmButtonColor: '#dc3545',
-                timer: 3000,
-                timerProgressBar: true,
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: @json(session('error')),
+                    confirmButtonColor: '#dc3545',
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
             });
-        });
-    </script>
+        </script>
     @endif
 
 
