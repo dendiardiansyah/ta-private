@@ -4,11 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\PenarikanPoinController;
-use App\Http\Controllers\PenjemputanController;
 use App\Http\Controllers\PelakuUsahaController;
 use App\Http\Controllers\PoinController;
-use App\Http\Controllers\PenarikanController;
-use App\Models\PelakuUsaha;
 
 Route::get('/', function () {
     return view('welcome');

@@ -19,7 +19,7 @@ class PoinController extends Controller
             ->get();
 
         // Kirim data poin ke view
-       
+
         return view('poin', compact('poinRecords'));
     }
 
