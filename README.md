@@ -89,11 +89,18 @@ docker compose up -d --build app web db phpmyadmin
 docker compose exec app composer install
 ```
 
-7. Generate key and run migrations
+7. Generate key, migrate, lalu seed data dulu
 
 ```bash
 docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate
+docker compose exec app php artisan db:seed
+```
+
+> Untuk setup baru, lebih aman pakai satu perintah ini agar tabel + data dummy langsung siap:
+
+```bash
+docker compose exec app php artisan migrate:fresh --seed
 ```
 
 8. Run frontend dev server (recommended before opening app)
@@ -167,3 +174,4 @@ docker compose up -d node
 
 - MySQL data is persistent in named volume `db_data`.
 - Database `bank_sampah` is created automatically on first MySQL initialization.
+- Seeder sudah dipisah per model (`User`, `JenisSampah`, `PelakuUsaha`, `Transaksi`, `Poin`, `PenarikanPoin`). Jalankan seed sebelum testing fitur agar data relasi terisi.

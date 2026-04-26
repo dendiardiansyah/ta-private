@@ -198,9 +198,9 @@
                         <div class="col-12 col-sm-6 col-lg-3 mb-4">
                             <div class="card news-card h-100 d-flex flex-column">
 
-                                <img src="{{ $article['urlToImage'] ?? asset('image/default-news.jpg') }}"
+                                <img src="{{ $article['urlToImage'] ?? asset('image/default.png') }}"
                                     class="card-img-top news-image" alt="News Image"
-                                    onerror="this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpTejOwOn7QfCbTDuYRwG0bbe-BaK9ljkKKw&s';">
+                                    onerror="this.onerror=null;this.src='{{ asset('image/default.png') }}';">
 
                                 <div class="card-body d-flex flex-column">
                                     <h5 class="card-title news-title">
