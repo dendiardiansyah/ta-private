@@ -59,7 +59,7 @@
                         <h3>Selamat Datang di Dashboard Admin Pelaku Usaha</h3>
                     </div>
                     <div class="card-body">
-                        <p>Halo, {{ auth('pelaku_usaha')->user()->nama }}! Anda berhasil login sebagai Admin Pelaku Usaha.</p>
+                        <p>Halo, {{ auth()->user()->name }}! Anda berhasil login sebagai Pelaku Usaha.</p>
                     </div>
                 </div>
 
@@ -88,17 +88,18 @@
                             </thead>
                             <tbody>
                                 @forelse($transaksis as $transaksi)
-                                <tr>
-                                    <td>{{ ($transaksis->currentPage() - 1) * $transaksis->perPage() + $loop->iteration }}</td>
-                                    <td>{{ $transaksi->user->name }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($transaksi->tanggal_transaksi)->format('d-m-Y') }}</td>
-                                    <td>{{ $transaksi->alamat_penjemputan }}</td>
-                                    <td>{{ $transaksi->status }}</td>
-                                </tr>
+                                    <tr>
+                                        <td>{{ ($transaksis->currentPage() - 1) * $transaksis->perPage() + $loop->iteration }}
+                                        </td>
+                                        <td>{{ $transaksi->user->name }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($transaksi->tanggal_transaksi)->format('d-m-Y') }}</td>
+                                        <td>{{ $transaksi->alamat_penjemputan }}</td>
+                                        <td>{{ $transaksi->status }}</td>
+                                    </tr>
                                 @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">Tidak ada data tersedia.</td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="5" class="text-center">Tidak ada data tersedia.</td>
+                                    </tr>
                                 @endforelse
                             </tbody>
                         </table>

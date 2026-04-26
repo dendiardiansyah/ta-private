@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\PelakuUsaha;
 use App\Models\Transaksi;
 use App\Models\JenisSampah;
 use Illuminate\Support\Facades\DB;
@@ -12,46 +11,21 @@ use Illuminate\Support\Facades\Storage;
 
 class PelakuUsahaController extends Controller
 {
-    public function showLoginForm()
-    {
-        return view('pelaku_usaha/login');
-    }
-
-    public function login(Request $request)
-    {
-        $request->validate([
-            'nama' => 'required|string',
-            'password' => 'required|string',
-        ]);
-
-        $credentials = $request->only('nama', 'password');
-
-        if (Auth::guard('pelaku_usaha')->attempt($credentials)) {
-            return redirect()->route('pelaku_usaha.dashboard');
-        }
-
-        return back()->withErrors(['message' => 'Login gagal, cek kembali nama atau password Anda.']);
-    }
-
-    public function logout(Request $request)
-    {
-        Auth::guard('pelaku_usaha')->logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/pelaku-usaha/login');
-    }
-
     public function showDashboard()
     {
-        $transaksis = Transaksi::with(['user', 'jenisSampah'])->paginate(10);
+        $pelakuUsahaUserId = request()->user()->id;
+        $transaksis = Transaksi::with(['user', 'jenisSampah'])
+            ->where('pelaku_usaha_id', $pelakuUsahaUserId)
+            ->paginate(10);
         return view('dashboard_admin', compact('transaksis'));
     }
 
     public function showTransaksi()
     {
-        $transaksis = Transaksi::with(['user', 'jenisSampah'])->get();
+        $pelakuUsahaUserId = request()->user()->id;
+        $transaksis = Transaksi::with(['user', 'jenisSampah'])
+            ->where('pelaku_usaha_id', $pelakuUsahaUserId)
+            ->get();
         return view('transaksi_pelaku_usaha', compact('transaksis'));
     }
 
@@ -63,6 +37,10 @@ class PelakuUsahaController extends Controller
         ]);
 
         $transaksi = Transaksi::findOrFail($transaksi_id);
+
+        if ((int) $transaksi->pelaku_usaha_id !== (int) $request->user()->id) {
+            abort(403);
+        }
         $transaksi->status = $request->status;
         $transaksi->save();
 

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\JenisSampah;
-use App\Models\PelakuUsaha;
 use App\Models\Transaksi;
 use App\Models\User;
 use Faker\Factory as Faker;
@@ -15,9 +14,9 @@ class TransaksiSeeder extends Seeder
     {
         $faker = Faker::create('id_ID');
 
-        $nasabahIds = User::pluck('id')->all();
+        $nasabahIds = User::where('role', 'user')->pluck('id')->all();
         $jenisSampahIds = JenisSampah::pluck('jenis_sampah_id')->all();
-        $pelakuUsahaIds = PelakuUsaha::pluck('pelaku_usaha_id')->all();
+        $pelakuUsahaIds = User::where('role', 'pelaku_usaha')->pluck('id')->all();
 
         if (empty($nasabahIds) || empty($jenisSampahIds) || empty($pelakuUsahaIds)) {
             return;

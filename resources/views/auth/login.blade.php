@@ -35,38 +35,59 @@
             <!-- Laravel Jetstream Login Form -->
             <form method="POST" action="{{ route('login') }}">
                 @csrf
+                <!-- Role -->
+                <div class="mb-3">
+                    <label for="role" class="form-label font">Login Sebagai</label>
+                    <select name="role" id="role" class="form-select @error('role') is-invalid @enderror" required>
+                        @php($selectedRole = old('role', request('role', 'user')))
+                        <option value="user" @selected($selectedRole === 'user')>Pengguna Umum</option>
+                        <option value="pelaku_usaha" @selected($selectedRole === 'pelaku_usaha')>Pelaku Usaha</option>
+                        <option value="petugas" @selected($selectedRole === 'petugas')>Petugas Penjemputan</option>
+                        <option value="admin" @selected($selectedRole === 'admin')>Administrator</option>
+                    </select>
+                    @error('role')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
                 <!-- Email -->
                 <div class="mb-3">
                     <label for="email" class="form-label font">Email</label>
-                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="email" value="{{ old('email') }}" required autofocus>
+                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                        id="email" value="{{ old('email') }}" required autofocus>
                     @error('email')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
                     @enderror
                 </div>
                 <!-- Password with Eye Icon -->
                 <div class="mb-3 position-relative">
                     <label for="password" class="form-label font">Password</label>
-                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" required>
-                    <i class="fas fa-eye position-absolute" id="togglePassword" style="top: 44px; right: 10px; cursor: pointer;"></i>
+                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
+                        id="password" required>
+                    <i class="fas fa-eye position-absolute" id="togglePassword"
+                        style="top: 44px; right: 10px; cursor: pointer;"></i>
                     @error('password')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
                     @enderror
                 </div>
                 <!-- Forgot Password -->
                 <div class="mb-3">
                     @if (Route::has('password.request'))
-                    <a href="{{ route('password.request') }}" class="font" style="text-decoration: none; color:green;">Forgot password?</a>
+                        <a href="{{ route('password.request') }}" class="font"
+                            style="text-decoration: none; color:green;">Forgot password?</a>
                     @endif
                 </div>
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-success w-100 font">Log in</button>
                 <!-- Sign Up Link -->
                 <div class="mt-3 text-center">
-                    <span class="font">Belum Punya Akun? <a href="{{ route('register') }}" class="font" style="text-decoration: none; color:green;">Daftar</a></span>
+                    <span class="font">Belum Punya Akun? <a href="{{ route('register') }}" class="font"
+                            style="text-decoration: none; color:green;">Daftar</a></span>
                 </div>
             </form>
         </div>
@@ -79,7 +100,7 @@
         const togglePassword = document.getElementById('togglePassword');
         const passwordField = document.getElementById('password');
 
-        togglePassword.addEventListener('click', function() {
+        togglePassword.addEventListener('click', function () {
             // Toggle the type attribute
             const type = passwordField.type === 'password' ? 'text' : 'password';
             passwordField.type = type;

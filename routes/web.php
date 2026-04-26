@@ -6,6 +6,8 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\PenarikanPoinController;
 use App\Http\Controllers\PelakuUsahaController;
 use App\Http\Controllers\PoinController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -61,23 +63,34 @@ Route::middleware([
 
 
 Route::prefix('pelaku-usaha')->group(function () {
-    // Login dan logout pelaku usaha
-    Route::get('/login', [PelakuUsahaController::class, 'showLoginForm'])->name('pelaku_usaha.login');
-    Route::post('/login', [PelakuUsahaController::class, 'login']);
+    // Legacy URL: arahkan login pelaku usaha ke login utama dengan role preselect
+    Route::get('/login', function () {
+        return redirect()->route('login', ['role' => 'pelaku_usaha']);
+    })->name('pelaku_usaha.login');
 
-
-
-    // Dashboard pelaku usaha (butuh autentikasi pelaku usaha)
-    Route::middleware('auth:pelaku_usaha')->group(function () {
+    Route::middleware([
+        'auth:sanctum',
+        config('jetstream.auth_session'),
+        'verified',
+        'role:pelaku_usaha',
+    ])->group(function () {
         Route::get('/dashboard', [PelakuUsahaController::class, 'showDashboard'])->name('pelaku_usaha.dashboard');
-        Route::get('/pelaku-usaha/katalog', [PelakuUsahaController::class, 'index'])->name('pelaku_usaha.katalog');
-        Route::get('/pelaku-usaha/katalog/edit/{jenis_sampah_id}', [PelakuUsahaController::class, 'editKatalog'])->name('pelaku_usaha.katalog.edit');
-        Route::put('/pelaku-usaha/katalog/edit/{jenis_sampah_id}', [PelakuUsahaController::class, 'updateKatalog'])->name('pelaku_usaha.katalog.update');
-        Route::delete('/pelaku-usaha/katalog/delete/{jenis_sampah_id}', [PelakuUsahaController::class, 'deleteKatalog'])->name('pelaku_usaha.katalog.delete');
-        Route::post('/pelaku-usaha/katalog/store', [PelakuUsahaController::class, 'addKatalog'])->name('pelaku_usaha.katalog.store');
-        Route::get('/pelaku-usaha/katalog/create', [PelakuUsahaController::class, 'createKatalog'])->name('pelaku_usaha.katalog.create');
-        Route::post('/logout', [PelakuUsahaController::class, 'logout'])->name('pelaku_usaha.logout');
+        Route::get('/katalog', [PelakuUsahaController::class, 'index'])->name('pelaku_usaha.katalog');
+        Route::get('/katalog/edit/{jenis_sampah_id}', [PelakuUsahaController::class, 'editKatalog'])->name('pelaku_usaha.katalog.edit');
+        Route::put('/katalog/edit/{jenis_sampah_id}', [PelakuUsahaController::class, 'updateKatalog'])->name('pelaku_usaha.katalog.update');
+        Route::delete('/katalog/delete/{jenis_sampah_id}', [PelakuUsahaController::class, 'deleteKatalog'])->name('pelaku_usaha.katalog.delete');
+        Route::post('/katalog/store', [PelakuUsahaController::class, 'addKatalog'])->name('pelaku_usaha.katalog.store');
+        Route::get('/katalog/create', [PelakuUsahaController::class, 'createKatalog'])->name('pelaku_usaha.katalog.create');
         Route::get('/transaksi', [PelakuUsahaController::class, 'showTransaksi'])->name('pelaku_usaha.transaksi');
         Route::put('/transaksi/{transaksi_id}', [PelakuUsahaController::class, 'update'])->name('pelaku_usaha.transaksi.update');
+
+        // Alias logout khusus pelaku usaha (pakai guard web yang sama)
+        Route::post('/logout', function (Request $request) {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect('/');
+        })->name('pelaku_usaha.logout');
     });
 });

@@ -24,12 +24,14 @@ class JenisSampahSeeder extends Seeder
         ];
 
         foreach ($jenisList as $jenis) {
-            JenisSampah::create([
-                'nama_jenis' => $jenis,
-                'deskripsi' => $faker->sentence(10),
-                'harga_sampah' => $faker->numberBetween(1000, 7000),
-                'gambar' => $faker->optional(0.4)->randomElement(['plastik.jpg', 'kertas.jpg', 'kaca.jpg']),
-            ]);
+            JenisSampah::updateOrCreate(
+                ['nama_jenis' => $jenis],
+                [
+                    'deskripsi' => $faker->sentence(10),
+                    'harga_sampah' => $faker->numberBetween(1000, 7000),
+                    'gambar' => $faker->optional(0.4)->randomElement(['plastik.jpg', 'kertas.jpg', 'kaca.jpg']),
+                ]
+            );
         }
     }
 }

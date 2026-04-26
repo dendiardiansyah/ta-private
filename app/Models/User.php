@@ -21,8 +21,11 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'role',
         'password',
         'total_poin', // Menyimpan total poin pengguna
+        'alamat',
+        'nomor_telepon',
     ];
 
     /**
@@ -69,5 +72,10 @@ class User extends Authenticatable
     public function poin()
     {
         return $this->hasMany(Poin::class, 'nasabah_id');
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return strtolower((string) $this->role) === strtolower($role);
     }
 }

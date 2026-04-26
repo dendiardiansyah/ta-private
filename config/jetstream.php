@@ -15,13 +15,6 @@ return [
     | during installation and will not need to be changed after that.
     |
     */
-    'middleware' => [
-        'auth:sanctum',
-        'auth:pelaku_usaha', // Tambahkan ini
-        config('jetstream.auth_session'),
-        'verified',
-    ],
-
     'stack' => 'livewire',
 
     /*

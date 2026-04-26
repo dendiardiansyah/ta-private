@@ -17,20 +17,24 @@ class UserSeeder extends Seeder
             ['email' => 'nasabah@example.com'],
             [
                 'name' => 'Nasabah Demo',
+                'role' => 'user',
                 'password' => Hash::make('password'),
                 'total_poin' => 0,
                 'email_verified_at' => now(),
             ]
         );
 
-        for ($i = 0; $i < 9; $i++) {
-            User::create([
-                'name' => $faker->name,
-                'email' => $faker->unique()->safeEmail,
-                'password' => Hash::make('password'),
-                'total_poin' => 0,
-                'email_verified_at' => now(),
-            ]);
+        for ($i = 1; $i <= 9; $i++) {
+            User::updateOrCreate(
+                ['email' => "nasabah+{$i}@local.invalid"],
+                [
+                    'name' => $faker->name,
+                    'role' => 'user',
+                    'password' => Hash::make('password'),
+                    'total_poin' => 0,
+                    'email_verified_at' => now(),
+                ]
+            );
         }
     }
 }
