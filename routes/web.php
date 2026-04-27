@@ -4,18 +4,35 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\PenarikanPoinController;
-use App\Http\Controllers\PelakuUsahaController;
+use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\PoinController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminKatalogController;
+use App\Http\Controllers\Admin\AdminTransaksiController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+Route::middleware('guest')->group(function () {
+    Route::get('/login', function () {
+        $query = request()->query();
+        $query['auth'] = 'login';
+
+        return redirect('/?' . http_build_query($query));
+    })->name('login');
+
+    Route::get('/register', function () {
+        $query = request()->query();
+        $query['auth'] = 'register';
+
+        return redirect('/?' . http_build_query($query));
+    })->name('register');
+});
+
 // Route untuk dashboard yang hanya bisa diakses oleh pengguna yang sudah terautentikasi
 Route::middleware([
-    'auth:sanctum',
+    'auth',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
@@ -26,17 +43,32 @@ Route::middleware([
     Route::post('/penarikan-poin', [PenarikanPoinController::class, 'store'])->name('penarikan.store');
 });
 
+Route::get('/katalog', [KatalogController::class, 'index'])->name('katalog');
 
-Route::get('/penjemputan', function () {
-    return view('penjemputan');
-})->name('penjemputan');
+// Admin routes (previously mislabeled as "pelaku usaha")
+Route::prefix('admin')->name('admin.')->middleware([
+    'auth',
+    config('jetstream.auth_session'),
+    'verified',
+    'role:admin',
+])->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/katalog', [PelakuUsahaController::class, 'showKatalog'])->name('katalog');
+    Route::get('/transaksi', [AdminTransaksiController::class, 'index'])->name('transaksi');
+    Route::put('/transaksi/{transaksi_id}', [AdminTransaksiController::class, 'update'])->name('transaksi.update');
+
+    Route::get('/katalog', [AdminKatalogController::class, 'index'])->name('katalog');
+    Route::get('/katalog/create', [AdminKatalogController::class, 'create'])->name('katalog.create');
+    Route::post('/katalog/store', [AdminKatalogController::class, 'store'])->name('katalog.store');
+    Route::get('/katalog/edit/{jenis_sampah_id}', [AdminKatalogController::class, 'edit'])->name('katalog.edit');
+    Route::put('/katalog/edit/{jenis_sampah_id}', [AdminKatalogController::class, 'update'])->name('katalog.update');
+    Route::delete('/katalog/delete/{jenis_sampah_id}', [AdminKatalogController::class, 'destroy'])->name('katalog.delete');
+});
 
 
 // Route untuk transaksi
 Route::middleware([
-    'auth:sanctum',
+    'auth',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
@@ -59,38 +91,4 @@ Route::middleware([
 
     // Route untuk menghapus transaksi penjemputan
     Route::delete('/penjemputan/{transaksi_id}', [TransaksiController::class, 'destroy'])->name('penjemputan.destroy');
-});
-
-
-Route::prefix('pelaku-usaha')->group(function () {
-    // Legacy URL: arahkan login pelaku usaha ke login utama dengan role preselect
-    Route::get('/login', function () {
-        return redirect()->route('login', ['role' => 'pelaku_usaha']);
-    })->name('pelaku_usaha.login');
-
-    Route::middleware([
-        'auth:sanctum',
-        config('jetstream.auth_session'),
-        'verified',
-        'role:pelaku_usaha',
-    ])->group(function () {
-        Route::get('/dashboard', [PelakuUsahaController::class, 'showDashboard'])->name('pelaku_usaha.dashboard');
-        Route::get('/katalog', [PelakuUsahaController::class, 'index'])->name('pelaku_usaha.katalog');
-        Route::get('/katalog/edit/{jenis_sampah_id}', [PelakuUsahaController::class, 'editKatalog'])->name('pelaku_usaha.katalog.edit');
-        Route::put('/katalog/edit/{jenis_sampah_id}', [PelakuUsahaController::class, 'updateKatalog'])->name('pelaku_usaha.katalog.update');
-        Route::delete('/katalog/delete/{jenis_sampah_id}', [PelakuUsahaController::class, 'deleteKatalog'])->name('pelaku_usaha.katalog.delete');
-        Route::post('/katalog/store', [PelakuUsahaController::class, 'addKatalog'])->name('pelaku_usaha.katalog.store');
-        Route::get('/katalog/create', [PelakuUsahaController::class, 'createKatalog'])->name('pelaku_usaha.katalog.create');
-        Route::get('/transaksi', [PelakuUsahaController::class, 'showTransaksi'])->name('pelaku_usaha.transaksi');
-        Route::put('/transaksi/{transaksi_id}', [PelakuUsahaController::class, 'update'])->name('pelaku_usaha.transaksi.update');
-
-        // Alias logout khusus pelaku usaha (pakai guard web yang sama)
-        Route::post('/logout', function (Request $request) {
-            Auth::guard('web')->logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-
-            return redirect('/');
-        })->name('pelaku_usaha.logout');
-    });
 });

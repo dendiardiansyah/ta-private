@@ -21,9 +21,12 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
-            'alamat_penjemputan' => ['nullable', 'string', 'max:255'],
+            'alamat' => ['nullable', 'string', 'max:65535'],
+            'alamat_penjemputan' => ['nullable', 'string', 'max:65535'],
             'nomor_telepon' => ['nullable', 'string', 'max:15'],
         ])->validateWithBag('updateProfileInformation');
+
+        $alamat = $input['alamat'] ?? $input['alamat_penjemputan'] ?? null;
 
         if (isset($input['photo'])) {
             $user->updateProfilePhoto($input['photo']);
@@ -38,7 +41,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user->forceFill([
                 'name' => $input['name'],
                 'email' => $input['email'],
-                'alamat_penjemputan' => $input['alamat_penjemputan'] ?? $user->alamat_penjemputan,  // Menggunakan nilai lama jika tidak ada input
+                'alamat' => $alamat ?? $user->alamat,
                 'nomor_telepon' => $input['nomor_telepon'] ?? $user->nomor_telepon,  // Menggunakan nilai lama jika tidak ada input
             ])->save();
         }

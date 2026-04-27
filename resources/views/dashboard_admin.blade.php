@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin Pelaku Usaha</title>
+    <title>Dashboard Administrator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <style>
@@ -19,7 +19,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('pelaku_usaha.dashboard') }}">
+            <a class="navbar-brand" href="{{ route('admin.dashboard') }}">
                 <img src="{{ asset('image/logomain.png') }}" alt="Logo">Dashboard
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -29,19 +29,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('pelaku-usaha/dashboard') ? 'active' : '' }}"
-                            href="{{ route('pelaku_usaha.dashboard') }}">Dashboard</a>
+                        <a class="nav-link {{ Request::is('admin/dashboard') ? 'active' : '' }}"
+                            href="{{ route('admin.dashboard') }}">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('pelaku-usaha/transaksi') ? 'active' : '' }}"
-                            href="{{ route('pelaku_usaha.transaksi') }}">Transaksi</a>
+                        <a class="nav-link {{ Request::is('admin/transaksi') ? 'active' : '' }}"
+                            href="{{ route('admin.transaksi') }}">Transaksi</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('pelaku-usaha/katalog') ? 'active' : '' }}"
-                            href="{{ route('pelaku_usaha.katalog') }}">Katalog</a>
+                        <a class="nav-link {{ Request::is('admin/katalog') ? 'active' : '' }}"
+                            href="{{ route('admin.katalog') }}">Katalog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('pelaku_usaha.logout') }}"
+                        <a class="nav-link" href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                     </li>
                 </ul>
@@ -56,10 +56,10 @@
                 <!-- Welcome Section -->
                 <div class="card mb-4">
                     <div class="card-header">
-                        <h3>Selamat Datang di Dashboard Admin Pelaku Usaha</h3>
+                        <h3>Selamat Datang di Dashboard Administrator</h3>
                     </div>
                     <div class="card-body">
-                        <p>Halo, {{ auth()->user()->name }}! Anda berhasil login sebagai Pelaku Usaha.</p>
+                        <p>Halo, {{ auth()->user()->name }}! Anda berhasil login sebagai Administrator.</p>
                     </div>
                 </div>
 
@@ -115,7 +115,7 @@
     </div>
 
     <!-- Logout Form -->
-    <form id="logout-form" action="{{ route('pelaku_usaha.logout') }}" method="POST" style="display: none;">
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
 

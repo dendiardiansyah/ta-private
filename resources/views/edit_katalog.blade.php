@@ -22,7 +22,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('pelaku_usaha.dashboard') }}">
+            <a class="navbar-brand" href="{{ route('admin.dashboard') }}">
                 <img src="{{ asset('image/logomain.png') }}" alt="Logo">Dashboard
             </a>
         </div>
@@ -38,7 +38,8 @@
                 <h4>Form Edit Jenis Sampah</h4>
             </div>
             <div class="card-body">
-                <form id="update-form" action="{{ route('pelaku_usaha.katalog.update', $jenisSampah->jenis_sampah_id) }}" method="POST" enctype="multipart/form-data">
+                <form id="update-form" action="{{ route('admin.katalog.update', $jenisSampah->jenis_sampah_id) }}"
+                    method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -64,13 +65,13 @@
                         <label for="gambar">Gambar</label>
                         <input type="file" class="form-control mb-3" id="gambar" name="gambar">
                         @if($jenisSampah->gambar)
-                        <span>{{ $jenisSampah->gambar }}</span>
+                            <span>{{ $jenisSampah->gambar }}</span>
                         @endif
                     </div>
 
                     <!-- Tombol Update -->
                     <button type="button" class="btn btn-success" onclick="confirmUpdate()">Update</button>
-                    <a href="{{ route('pelaku_usaha.katalog') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('admin.katalog') }}" class="btn btn-secondary">Kembali</a>
                 </form>
             </div>
         </div>

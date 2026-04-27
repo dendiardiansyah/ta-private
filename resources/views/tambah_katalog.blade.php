@@ -28,7 +28,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('pelaku_usaha.dashboard') }}">
+            <a class="navbar-brand" href="{{ route('admin.dashboard') }}">
                 <img src="{{ asset('image/logomain.png') }}" alt="Logo">Dashboard
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -38,15 +38,15 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('pelaku-usaha/dashboard') ? 'active' : '' }}"
-                            href="{{ route('pelaku_usaha.dashboard') }}">Dashboard</a>
+                        <a class="nav-link {{ Request::is('admin/dashboard') ? 'active' : '' }}"
+                            href="{{ route('admin.dashboard') }}">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('pelaku-usaha/katalog') ? 'active' : '' }}"
-                            href="{{ route('pelaku_usaha.katalog') }}">Katalog</a>
+                        <a class="nav-link {{ Request::is('admin/katalog') ? 'active' : '' }}"
+                            href="{{ route('admin.katalog') }}">Katalog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('pelaku_usaha.logout') }}"
+                        <a class="nav-link" href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                     </li>
                 </ul>
@@ -62,51 +62,58 @@
         <div class="card">
 
             <div class="card-body">
-                <form action="{{ route('pelaku_usaha.katalog.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.katalog.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="mb-3">
                         <label for="nama" class="form-label">Nama Jenis Sampah</label>
-                        <input type="text" class="form-control @error('nama_jenis') is-invalid @enderror" id="nama" name="nama_jenis" value="{{ old('nama_jenis') }}" placeholder="Masukkan nama jenis sampah" required>
+                        <input type="text" class="form-control @error('nama_jenis') is-invalid @enderror" id="nama"
+                            name="nama_jenis" value="{{ old('nama_jenis') }}" placeholder="Masukkan nama jenis sampah"
+                            required>
                         @error('nama_jenis')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
                     </div>
 
                     <div class="mb-3">
                         <label for="deskripsi" class="form-label">Deskripsi</label>
-                        <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" rows="3" placeholder="Tambahkan deskripsi sampah" required>{{ old('deskripsi') }}</textarea>
+                        <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi"
+                            name="deskripsi" rows="3" placeholder="Tambahkan deskripsi sampah"
+                            required>{{ old('deskripsi') }}</textarea>
                         @error('deskripsi')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
                     </div>
 
                     <div class="mb-3">
                         <label for="harga" class="form-label">Harga per Kilo</label>
-                        <input type="number" class="form-control @error('harga_sampah') is-invalid @enderror" id="harga" name="harga_sampah" value="{{ old('harga_sampah') }}" placeholder="Masukkan harga per kilo" required>
+                        <input type="number" class="form-control @error('harga_sampah') is-invalid @enderror" id="harga"
+                            name="harga_sampah" value="{{ old('harga_sampah') }}" placeholder="Masukkan harga per kilo"
+                            required>
                         @error('harga_sampah')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
                     </div>
 
                     <div class="mb-3">
                         <label for="gambar" class="form-label">Gambar</label>
-                        <input type="file" class="form-control @error('gambar') is-invalid @enderror" id="gambar" name="gambar">
+                        <input type="file" class="form-control @error('gambar') is-invalid @enderror" id="gambar"
+                            name="gambar">
                         @error('gambar')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
                     </div>
 
                     <div class="d-flex justify-content-between">
-                        <a href="{{ route('pelaku_usaha.katalog') }}" class="btn btn-secondary">Kembali</a>
+                        <a href="{{ route('admin.katalog') }}" class="btn btn-secondary">Kembali</a>
                         <button type="submit" class="btn btn-success">Tambah</button>
                     </div>
                 </form>
@@ -115,7 +122,7 @@
     </div>
 
     <!-- Logout Form -->
-    <form id="logout-form" action="{{ route('pelaku_usaha.logout') }}" method="POST" style="display: none;">
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
 

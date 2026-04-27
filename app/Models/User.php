@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
@@ -19,9 +22,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'id',
         'name',
         'email',
-        'role',
         'password',
         'total_poin', // Menyimpan total poin pengguna
         'alamat',
@@ -74,8 +77,49 @@ class User extends Authenticatable
         return $this->hasMany(Poin::class, 'nasabah_id');
     }
 
-    public function hasRole(string $role): bool
+    public function roles(): BelongsToMany
     {
-        return strtolower((string) $this->role) === strtolower($role);
+        return $this->belongsToMany(Role::class, 'user_roles');
+    }
+
+    public function pelakuUsahaProfile(): HasOne
+    {
+        return $this->hasOne(PelakuUsahaProfile::class, 'user_id');
+    }
+
+    /**
+     * @param  array<int, string>  $roleNames
+     */
+    public function hasAnyRole(array $roleNames): bool
+    {
+        $roleNames = array_values(array_filter(array_map(fn($r) => strtolower(trim((string) $r)), $roleNames)));
+
+        // Backward-compat aliasing: old "pelaku_usaha" role now behaves as "admin".
+        // This keeps existing DB rows working while you transition UI + routes.
+        $expanded = [];
+        foreach ($roleNames as $name) {
+            $expanded[] = $name;
+
+            if ($name === 'admin') {
+                $expanded[] = 'pelaku_usaha';
+            }
+
+            if ($name === 'pelaku_usaha') {
+                $expanded[] = 'admin';
+            }
+        }
+
+        $roleNames = array_values(array_unique(array_filter($expanded)));
+
+        if ($roleNames === []) {
+            return false;
+        }
+
+        return $this->roles()->whereIn(DB::raw('LOWER(name)'), $roleNames)->exists();
+    }
+
+    public function hasRole(string $roleName): bool
+    {
+        return $this->hasAnyRole([$roleName]);
     }
 }

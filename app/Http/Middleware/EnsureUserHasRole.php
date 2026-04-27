@@ -9,9 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 class EnsureUserHasRole
 {
     /**
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * Usage: ->middleware('role:admin') or ->middleware('role:admin,petugas')
      */
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         $user = $request->user();
 
@@ -19,7 +19,13 @@ class EnsureUserHasRole
             abort(401);
         }
 
-        if (!method_exists($user, 'hasRole') || !$user->hasRole($role)) {
+        $roles = array_values(array_filter(array_map('trim', $roles)));
+
+        if ($roles === []) {
+            return $next($request);
+        }
+
+        if (!method_exists($user, 'hasAnyRole') || !$user->hasAnyRole($roles)) {
             abort(403);
         }
 

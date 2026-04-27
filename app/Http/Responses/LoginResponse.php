@@ -2,8 +2,8 @@
 
 namespace App\Http\Responses;
 
-use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 
 class LoginResponse implements LoginResponseContract
 {
@@ -17,28 +17,10 @@ class LoginResponse implements LoginResponseContract
     {
         $user = $request->user();
 
-        // 1. Cek apakah user adalah Pelaku Usaha
-        if ($user && $user->hasRole('pelaku_usaha')) {
-            return redirect()->intended(route('pelaku_usaha.dashboard'));
+        if ($user && method_exists($user, 'hasRole') && $user->hasRole('admin') && Route::has('admin.dashboard')) {
+            return redirect()->intended(route('admin.dashboard'));
         }
 
-        // 2. Cek apakah user adalah Petugas
-        if ($user && $user->hasRole('petugas')) {
-            if (Route::has('petugas.dashboard')) {
-                return redirect()->intended(route('petugas.dashboard'));
-            }
-
-            return redirect()->intended(route('penjemputan'));
-        }
-
-        // 3. Cek apakah user adalah Admin
-        if ($user && $user->hasRole('admin')) {
-            if (Route::has('admin.dashboard')) {
-                return redirect()->intended(route('admin.dashboard'));
-            }
-        }
-
-        // 4. Default redirect buat Nasabah / User biasa
         return redirect()->intended(route('dashboard'));
     }
 }

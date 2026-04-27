@@ -16,7 +16,6 @@ class Transaksi extends Model
     protected $fillable = [
         'nasabah_id',
         'jenis_sampah_id',
-        'pelaku_usaha_id',
         'alamat_penjemputan',
         'jumlah',
         'tanggal_transaksi',
@@ -29,11 +28,6 @@ class Transaksi extends Model
     public function jenisSampah()
     {
         return $this->belongsTo(JenisSampah::class, 'jenis_sampah_id');
-    }
-
-    public function pelakuUsaha()
-    {
-        return $this->belongsTo(User::class, 'pelaku_usaha_id');
     }
     public function poin()
     {

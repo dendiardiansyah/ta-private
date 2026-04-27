@@ -22,7 +22,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('pelaku_usaha.dashboard') }}">
+            <a class="navbar-brand" href="{{ route('admin.dashboard') }}">
                 <img src="{{ asset('image/logomain.png') }}" alt="Logo">Dashboard</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,16 +31,16 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('pelaku_usaha.dashboard') }}">Dashboard</a>
+                        <a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('pelaku_usaha.transaksi') }}">Transaksi</a>
+                        <a class="nav-link" href="{{ route('admin.transaksi') }}">Transaksi</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('pelaku_usaha.katalog') }}">Katalog</a>
+                        <a class="nav-link active" href="{{ route('admin.katalog') }}">Katalog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('pelaku_usaha.logout') }}"
+                        <a class="nav-link" href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                     </li>
                 </ul>
@@ -53,14 +53,14 @@
 
 
         @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
         @endif
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="text-center">Katalog Sampah</h1>
             <!-- Button Tambah -->
-            <a href="{{ route('pelaku_usaha.katalog.create') }}" class="btn btn-outline-success">+ Tambah Jenis Sampah</a>
+            <a href="{{ route('admin.katalog.create') }}" class="btn btn-outline-success">+ Tambah Jenis Sampah</a>
         </div>
         <div class="card">
             <div class="card-header">
@@ -80,34 +80,36 @@
                     </thead>
                     <tbody>
                         @foreach($jenisSampahs as $jenisSampah)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $jenisSampah->nama_jenis }}</td>
-                            <td>{{ $jenisSampah->deskripsi }}</td>
-                            <td>{{ $jenisSampah->harga_sampah }}</td>
-                            <td>
-                                <!-- Menampilkan Nama Gambar sebagai teks -->
-                                @if($jenisSampah->gambar)
-                                <span>{{ $jenisSampah->gambar }}</span>
-                                @else
-                                <span>No Image</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="button-container" style="display: flex; gap: 5px;">
-                                    <!-- Tombol Edit -->
-                                    <a href="{{ route('pelaku_usaha.katalog.edit', $jenisSampah->jenis_sampah_id) }}" class="btn btn-warning btn-sm " style="width: 60px;">Edit</a>
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $jenisSampah->nama_jenis }}</td>
+                                <td>{{ $jenisSampah->deskripsi }}</td>
+                                <td>{{ $jenisSampah->harga_sampah }}</td>
+                                <td>
+                                    <!-- Menampilkan Nama Gambar sebagai teks -->
+                                    @if($jenisSampah->gambar)
+                                        <span>{{ $jenisSampah->gambar }}</span>
+                                    @else
+                                        <span>No Image</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="button-container" style="display: flex; gap: 5px;">
+                                        <!-- Tombol Edit -->
+                                        <a href="{{ route('admin.katalog.edit', $jenisSampah->jenis_sampah_id) }}"
+                                            class="btn btn-warning btn-sm " style="width: 60px;">Edit</a>
 
-                                    <!-- Tombol Delete -->
-                                    <form action="{{ route('pelaku_usaha.katalog.delete', $jenisSampah->jenis_sampah_id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm btn-custom">Delete</button>
-                                    </form>
-                                </div>
+                                        <!-- Tombol Delete -->
+                                        <form action="{{ route('admin.katalog.delete', $jenisSampah->jenis_sampah_id) }}"
+                                            method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm btn-custom">Delete</button>
+                                        </form>
+                                    </div>
 
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
                         @endforeach
                     </tbody>
 
@@ -118,7 +120,7 @@
     </div>
 
     <!-- Logout Form -->
-    <form id="logout-form" action="{{ route('pelaku_usaha.logout') }}" method="POST" style="display: none;">
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
 
