@@ -19,7 +19,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     {
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->getKey())],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
             'alamat' => ['nullable', 'string', 'max:65535'],
             'alamat_penjemputan' => ['nullable', 'string', 'max:65535'],
@@ -27,6 +27,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
         ])->validateWithBag('updateProfileInformation');
 
         $alamat = $input['alamat'] ?? $input['alamat_penjemputan'] ?? null;
+        $nomorTelepon = $input['nomor_telepon'] ?? null;
 
         if (isset($input['photo'])) {
             $user->updateProfilePhoto($input['photo']);
@@ -36,13 +37,13 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $input['email'] !== $user->email &&
             $user instanceof MustVerifyEmail
         ) {
-            $this->updateVerifiedUser($user, $input);
+            $this->updateVerifiedUser($user, $input, $alamat, $nomorTelepon);
         } else {
             $user->forceFill([
                 'name' => $input['name'],
                 'email' => $input['email'],
                 'alamat' => $alamat ?? $user->alamat,
-                'nomor_telepon' => $input['nomor_telepon'] ?? $user->nomor_telepon,  // Menggunakan nilai lama jika tidak ada input
+                'nomor_telepon' => $nomorTelepon ?? $user->nomor_telepon,  // Menggunakan nilai lama jika tidak ada input
             ])->save();
         }
     }
@@ -52,11 +53,13 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      *
      * @param  array<string, string>  $input
      */
-    protected function updateVerifiedUser(User $user, array $input): void
+    protected function updateVerifiedUser(User $user, array $input, ?string $alamat = null, ?string $nomorTelepon = null): void
     {
         $user->forceFill([
             'name' => $input['name'],
             'email' => $input['email'],
+            'alamat' => $alamat ?? $user->alamat,
+            'nomor_telepon' => $nomorTelepon ?? $user->nomor_telepon,
             'email_verified_at' => null,
         ])->save();
 
