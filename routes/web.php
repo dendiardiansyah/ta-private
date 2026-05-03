@@ -9,6 +9,7 @@ use App\Http\Controllers\PoinController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminKatalogController;
 use App\Http\Controllers\Admin\AdminTransaksiController;
+use App\Http\Controllers\Petugas\PetugasTransaksiController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -65,6 +66,17 @@ Route::prefix('admin')->name('admin.')->middleware([
     Route::delete('/katalog/delete/{jenis_sampah_id}', [AdminKatalogController::class, 'destroy'])->name('katalog.delete');
 });
 
+// Petugas routes
+Route::prefix('petugas')->name('petugas.')->middleware([
+    'auth',
+    config('jetstream.auth_session'),
+    'verified',
+    'role:petugas',
+])->group(function () {
+    Route::get('/', [PetugasTransaksiController::class, 'index'])->name('index');
+    Route::put('/{transaksi_id}', [PetugasTransaksiController::class, 'update'])->name('update');
+});
+
 
 // Route untuk transaksi
 Route::middleware([
@@ -91,4 +103,21 @@ Route::middleware([
 
     // Route untuk menghapus transaksi penjemputan
     Route::delete('/penjemputan/{transaksi_id}', [TransaksiController::class, 'destroy'])->name('penjemputan.destroy');
+});
+
+// Fallback Route untuk mengalihkan halaman yang tidak relevan (404 Not Found)
+Route::fallback(function () {
+    if (auth()->check()) {
+        $user = auth()->user();
+        if ($user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        }
+        if ($user->hasRole('petugas')) {
+            return redirect()->route('petugas.index');
+        }
+        return redirect()->route('dashboard');
+    }
+
+    // Jika belum login, paksa ke halaman login
+    return redirect()->route('login');
 });

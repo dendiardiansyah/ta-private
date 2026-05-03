@@ -85,6 +85,11 @@ class User extends Authenticatable
         return $this->hasMany(Poin::class, 'nasabah_id');
     }
 
+    public function assignedTransaksi()
+    {
+        return $this->hasMany(Transaksi::class, 'petugas_id');
+    }
+
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'user_roles');

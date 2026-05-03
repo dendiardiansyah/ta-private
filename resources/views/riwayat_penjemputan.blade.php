@@ -63,7 +63,8 @@
                                     <th>Jumlah (kg)</th>
                                     <th>Tanggal</th>
                                     <th>Status</th>
-                                    <th>Poin</th>
+                                    <th>Petugas</th>
+                                    <th>Poin Ditukarkan</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -77,13 +78,18 @@
                                         <td>{{ $transaksi->jumlah }}</td>
                                         <td>{{ \Carbon\Carbon::parse($transaksi->tanggal_transaksi)->format('d-m-Y') }}</td>
                                         <td>
-                                            @if ($transaksi->status === 'pending')
-                                                <span class="chip chip-warning">Pending</span>
-                                            @elseif ($transaksi->status === 'disetujui' || $transaksi->status === 'selesai')
-                                                <span class="chip chip-success">{{ ucfirst($transaksi->status) }}</span>
+                                            @if ($transaksi->status === 'Menunggu Petugas')
+                                                <span class="chip chip-warning">{{ $transaksi->status }}</span>
+                                            @elseif ($transaksi->status === 'Selesai')
+                                                <span class="chip chip-success">{{ $transaksi->status }}</span>
                                             @else
-                                                <span class="chip chip-secondary">{{ ucfirst($transaksi->status) }}</span>
+                                                <span class="chip chip-secondary"
+                                                    style="background:#cff4fc;color:#055160;">{{ $transaksi->status }}</span>
                                             @endif
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="fw-semibold text-primary">{{ $transaksi->petugas ? $transaksi->petugas->name : 'Belum Ditugaskan' }}</span>
                                         </td>
                                         <td>
                                             @php
@@ -94,21 +100,25 @@
                                         </td>
                                         <td>
                                             <div class="d-flex gap-2">
-                                                <a href="{{ route('penjemputan.edit', $transaksi->transaksi_id) }}"
-                                                    class="btn btn-sm btn-outline-primary">Edit</a>
-                                                <form action="{{ route('penjemputan.destroy', $transaksi->transaksi_id) }}"
-                                                    method="POST" onsubmit="return confirm('Hapus transaksi ini?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="btn btn-sm btn-outline-danger">Hapus</button>
-                                                </form>
+                                                @if ($transaksi->status === 'Menunggu Petugas' || $transaksi->status === 'pending')
+                                                    <a href="{{ route('penjemputan.edit', $transaksi->transaksi_id) }}"
+                                                        class="btn btn-sm btn-outline-primary">Edit</a>
+                                                    <form action="{{ route('penjemputan.destroy', $transaksi->transaksi_id) }}"
+                                                        method="POST" onsubmit="return confirm('Hapus transaksi ini?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="btn btn-sm btn-outline-danger">Hapus</button>
+                                                    </form>
+                                                @else
+                                                    <span class="text-muted"><small><i>Terkunci</i></small></span>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="9" class="text-center text-muted py-4">Tidak ada riwayat penjemputan
+                                        <td colspan="10" class="text-center text-muted py-4">Tidak ada riwayat penjemputan
                                             yang tersedia.</td>
                                     </tr>
                                 @endforelse

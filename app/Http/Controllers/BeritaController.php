@@ -8,6 +8,15 @@ class BeritaController extends Controller
 {
     public function index()
     {
+        if (auth()->check()) {
+            if (auth()->user()->hasRole('admin')) {
+                return redirect()->route('admin.dashboard');
+            }
+            if (auth()->user()->hasRole('petugas')) {
+                return redirect()->route('petugas.index');
+            }
+        }
+
         $apiKey = env('NEWS_API_KEY');
         $response = Http::get("https://newsapi.org/v2/top-headlines", [
             'country' => 'us',

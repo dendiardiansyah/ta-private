@@ -16,6 +16,7 @@ class Transaksi extends Model
     protected $fillable = [
         'nasabah_id',
         'jenis_sampah_id',
+        'petugas_id',
         'alamat_penjemputan',
         'jumlah',
         'tanggal_transaksi',
@@ -24,6 +25,10 @@ class Transaksi extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'nasabah_id');  // Nasabah_id adalah foreign key yang merujuk ke tabel users
+    }
+    public function petugas()
+    {
+        return $this->belongsTo(User::class, 'petugas_id');
     }
     public function jenisSampah()
     {

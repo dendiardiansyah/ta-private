@@ -16,22 +16,38 @@ class UserSeeder extends Seeder
         $faker = Faker::create('id_ID');
 
         $now = now();
-        $userRoleId = Role::query()->firstOrCreate(['name' => 'user'])->id;
 
-        $demo = User::updateOrCreate(
-            ['email' => 'nasabah@example.com'],
-            [
-                'name' => 'Nasabah Demo',
-                'password' => Hash::make('password'),
-                'total_poin' => 0,
-                'email_verified_at' => now(),
-            ]
-        );
+        $roles = [
+            'user' => ['email' => 'nasabah@example.com', 'name' => 'Nasabah Demo'],
+            'admin' => ['email' => 'admin@example.com', 'name' => 'Admin Demo'],
+            'petugas' => ['email' => 'petugas@example.com', 'name' => 'Petugas Demo'],
+            'pelaku_usaha' => ['email' => 'pelaku_usaha@example.com', 'name' => 'Pelaku Usaha Demo'],
+        ];
 
-        DB::table('user_roles')->updateOrInsert(
-            ['user_id' => $demo->id, 'role_id' => $userRoleId],
-            ['created_at' => $now, 'updated_at' => $now]
-        );
+        $userRoleId = null;
+
+        foreach ($roles as $roleName => $data) {
+            $roleId = Role::query()->firstOrCreate(['name' => $roleName])->id;
+
+            if ($roleName === 'user') {
+                $userRoleId = $roleId;
+            }
+
+            $demo = User::updateOrCreate(
+                ['email' => $data['email']],
+                [
+                    'name' => $data['name'],
+                    'password' => Hash::make('password'),
+                    'total_poin' => 0,
+                    'email_verified_at' => now(),
+                ]
+            );
+
+            DB::table('user_roles')->updateOrInsert(
+                ['user_id' => $demo->id, 'role_id' => $roleId],
+                ['created_at' => $now, 'updated_at' => $now]
+            );
+        }
 
         for ($i = 1; $i <= 9; $i++) {
             $user = User::updateOrCreate(

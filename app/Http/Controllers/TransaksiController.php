@@ -33,16 +33,25 @@ class TransaksiController extends Controller
             'tanggal_transaksi' => 'required|date',
         ]);
 
+        // Auto-Assignment Logic: Petugas with least active transactions
+        $petugas = \App\Models\User::whereHas('roles', function ($q) {
+            $q->where('name', 'petugas');
+        })->withCount([
+                    'assignedTransaksi as active_tasks_count' => function ($q) {
+                        $q->where('status', '!=', 'Selesai');
+                    }
+                ])->orderBy('active_tasks_count', 'asc')->first();
+
         // Membuat transaksi baru
         Transaksi::create([
             'nasabah_id' => Auth::id(),
             'jenis_sampah_id' => $request->jenis_sampah_id, // Menyimpan jenis sampah yang dipilih
+            'petugas_id' => $petugas ? $petugas->id : null,
             'alamat_penjemputan' => $request->alamat_penjemputan,
             'jumlah' => $request->jumlah,
             'tanggal_transaksi' => $request->tanggal_transaksi,
-
+            'status' => 'Menunggu Petugas'
         ]);
-
 
         // Redirect setelah berhasil menyimpan transaksi
         session()->flash('message', 'Transaksi berhasil dibuat!');
@@ -75,6 +84,10 @@ class TransaksiController extends Controller
             ->where('nasabah_id', Auth::id())
             ->firstOrFail();
 
+        if ($transaksi->status !== 'Menunggu Petugas' && $transaksi->status !== 'pending') {
+            return redirect()->route('penjemputan.history')->with('error', 'Transaksi sedang/sudah diproses, tidak bisa diubah!');
+        }
+
         // Ambil semua data jenis sampah
         $jenisSampah = JenisSampah::all();
 
@@ -96,6 +109,10 @@ class TransaksiController extends Controller
         $transaksi = Transaksi::where('transaksi_id', $transaksi_id)
             ->where('nasabah_id', Auth::id())
             ->firstOrFail();
+
+        if ($transaksi->status !== 'Menunggu Petugas' && $transaksi->status !== 'pending') {
+            return redirect()->route('penjemputan.history')->with('error', 'Transaksi sedang/sudah diproses, tidak bisa diubah!');
+        }
 
         // Update data transaksi
         $transaksi->update([
@@ -119,6 +136,9 @@ class TransaksiController extends Controller
 
         // Jika transaksi ditemukan, hapus
         if ($transaksi) {
+            if ($transaksi->status !== 'Menunggu Petugas' && $transaksi->status !== 'pending') {
+                return redirect()->route('penjemputan.history')->with('error', 'Transaksi sedang/sudah diproses, tidak bisa dibatalkan/dihapus!');
+            }
             $transaksi->delete();
             return redirect()->route('penjemputan.history')->with('success', 'Penjemputan berhasil dihapus!');
         }
