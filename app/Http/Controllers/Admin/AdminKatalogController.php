@@ -13,12 +13,12 @@ class AdminKatalogController extends Controller
     {
         $jenisSampahs = JenisSampah::all();
 
-        return view('katalog_admin', compact('jenisSampahs'));
+        return view('admin.katalog', compact('jenisSampahs'));
     }
 
     public function create()
     {
-        return view('tambah_katalog');
+        return view('admin.tambah_katalog');
     }
 
     public function store(Request $request)
@@ -43,7 +43,7 @@ class AdminKatalogController extends Controller
     {
         $jenisSampah = JenisSampah::findOrFail($jenis_sampah_id);
 
-        return view('edit_katalog', compact('jenisSampah'));
+        return view('admin.edit_katalog', compact('jenisSampah'));
     }
 
     public function update(Request $request, int $jenis_sampah_id)

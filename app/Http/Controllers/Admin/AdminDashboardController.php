@@ -14,6 +14,6 @@ class AdminDashboardController extends Controller
             ->orderByDesc('transaksi_id')
             ->paginate(10);
 
-        return view('dashboard_admin', compact('transaksis'));
+        return view('admin.dashboard', compact('transaksis'));
     }
 }

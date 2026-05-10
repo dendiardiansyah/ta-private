@@ -15,7 +15,7 @@ class PenarikanPoinController extends Controller
         // Ambil riwayat penarikan poin yang sudah dilakukan oleh user
         $penarikanPoin = PenarikanPoin::where('nasabah_id', Auth::id())->get();
 
-        return view('penarikan', compact('penarikanPoin'));
+        return view('user.penarikan', compact('penarikanPoin'));
     }
 
     // Proses penarikan poin

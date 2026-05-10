@@ -6,64 +6,64 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-mark class="block h-9 w-auto" />
+                        <x-common.application-mark class="block h-9 w-auto" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 @if(Auth::check() && Auth::user()->hasRole('petugas'))
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link href="{{ route('petugas.index') }}" :active="request()->routeIs('petugas.index')">
+                        <x-common.nav-link href="{{ route('petugas.index') }}" :active="request()->routeIs('petugas.index')">
                             {{ __('Daftar Penugasan') }}
-                        </x-nav-link>
+                        </x-common.nav-link>
                     </div>
                 @elseif(Auth::check() && Auth::user()->hasRole('admin'))
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
+                        <x-common.nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
                             {{ __('Dashboard Admin') }}
-                        </x-nav-link>
+                        </x-common.nav-link>
                     </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link href="{{ route('admin.transaksi') }}" :active="request()->routeIs('admin.transaksi')">
+                        <x-common.nav-link href="{{ route('admin.transaksi') }}" :active="request()->routeIs('admin.transaksi')">
                             {{ __('Persetujuan Transaksi') }}
-                        </x-nav-link>
+                        </x-common.nav-link>
                     </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link href="{{ route('admin.katalog') }}" :active="request()->routeIs('admin.katalog')">
+                        <x-common.nav-link href="{{ route('admin.katalog') }}" :active="request()->routeIs('admin.katalog')">
                             {{ __('Katalog Admin') }}
-                        </x-nav-link>
+                        </x-common.nav-link>
                     </div>
                 @else
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                        <x-common.nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
-                        </x-nav-link>
+                        </x-common.nav-link>
                     </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link href="{{ route('penjemputan') }}" :active="request()->routeIs('penjemputan')">
+                        <x-common.nav-link href="{{ route('penjemputan') }}" :active="request()->routeIs('penjemputan')">
                             {{ __('Penjemputan') }}
-                        </x-nav-link>
+                        </x-common.nav-link>
                     </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link href="{{ route('penjemputan.history') }}"
+                        <x-common.nav-link href="{{ route('penjemputan.history') }}"
                             :active="request()->routeIs('penjemputan.history')">
                             {{ __('Riwayat Penjemputan') }}
-                        </x-nav-link>
+                        </x-common.nav-link>
                     </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link href="{{ route('katalog') }}" :active="request()->routeIs('katalog')">
+                        <x-common.nav-link href="{{ route('katalog') }}" :active="request()->routeIs('katalog')">
                             {{ __('Katalog') }}
-                        </x-nav-link>
+                        </x-common.nav-link>
                     </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link href="{{ route('poin') }}" :active="request()->routeIs('poin')">
+                        <x-common.nav-link href="{{ route('poin') }}" :active="request()->routeIs('poin')">
                             {{ __('Poin') }}
-                        </x-nav-link>
+                        </x-common.nav-link>
                     </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link href="{{ route('penarikan') }}" :active="request()->routeIs('penarikan')">
+                        <x-common.nav-link href="{{ route('penarikan') }}" :active="request()->routeIs('penarikan')">
                             {{ __('Penarikan') }}
-                        </x-nav-link>
+                        </x-common.nav-link>
                     </div>
                 @endif
             </div>
@@ -72,7 +72,7 @@
                 <!-- Teams Dropdown -->
                 @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
                     <div class="ms-3 relative">
-                        <x-dropdown align="right" width="60">
+                        <x-common.dropdown align="right" width="60">
                             <x-slot name="trigger">
                                 <span class="inline-flex rounded-md">
                                     <button type="button"
@@ -96,14 +96,14 @@
                                     </div>
 
                                     <!-- Team Settings -->
-                                    <x-dropdown-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
+                                    <x-common.dropdown-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
                                         {{ __('Team Settings') }}
-                                    </x-dropdown-link>
+                                    </x-common.dropdown-link>
 
                                     @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
-                                        <x-dropdown-link href="{{ route('teams.create') }}">
+                                        <x-common.dropdown-link href="{{ route('teams.create') }}">
                                             {{ __('Create New Team') }}
-                                        </x-dropdown-link>
+                                        </x-common.dropdown-link>
                                     @endcan
 
                                     <!-- Team Switcher -->
@@ -115,18 +115,18 @@
                                         </div>
 
                                         @foreach (Auth::user()->allTeams() as $team)
-                                            <x-switchable-team :team="$team" />
+                                            <x-common.switchable-team :team="$team" />
                                         @endforeach
                                     @endif
                                 </div>
                             </x-slot>
-                        </x-dropdown>
+                        </x-common.dropdown>
                     </div>
                 @endif
 
                 <!-- Settings Dropdown -->
                 <div class="ms-3 relative">
-                    <x-dropdown align="right" width="48">
+                    <x-common.dropdown align="right" width="48">
                         <x-slot name="trigger">
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
                                 <button
@@ -156,14 +156,14 @@
                                 {{ __('Manage Account') }}
                             </div>
 
-                            <x-dropdown-link href="{{ route('profile.show') }}">
+                            <x-common.dropdown-link href="{{ route('profile.show') }}">
                                 {{ __('Profile') }}
-                            </x-dropdown-link>
+                            </x-common.dropdown-link>
 
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
-                                <x-dropdown-link href="{{ route('api-tokens.index') }}">
+                                <x-common.dropdown-link href="{{ route('api-tokens.index') }}">
                                     {{ __('API Tokens') }}
-                                </x-dropdown-link>
+                                </x-common.dropdown-link>
                             @endif
 
                             <div class="border-t border-gray-200"></div>
@@ -172,12 +172,12 @@
                             <form method="POST" action="{{ route('logout') }}" x-data>
                                 @csrf
 
-                                <x-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
+                                <x-common.dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
                                     {{ __('Log Out') }}
-                                </x-dropdown-link>
+                                </x-common.dropdown-link>
                             </form>
                         </x-slot>
-                    </x-dropdown>
+                    </x-common.dropdown>
                 </div>
             </div>
 
@@ -201,41 +201,41 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             @if(Auth::check() && Auth::user()->hasRole('petugas'))
-                <x-responsive-nav-link href="{{ route('petugas.index') }}" :active="request()->routeIs('petugas.index')">
+                <x-common.responsive-nav-link href="{{ route('petugas.index') }}" :active="request()->routeIs('petugas.index')">
                     {{ __('Daftar Penugasan') }}
-                </x-responsive-nav-link>
+                </x-common.responsive-nav-link>
             @elseif(Auth::check() && Auth::user()->hasRole('admin'))
-                <x-responsive-nav-link href="{{ route('admin.dashboard') }}"
+                <x-common.responsive-nav-link href="{{ route('admin.dashboard') }}"
                     :active="request()->routeIs('admin.dashboard')">
                     {{ __('Dashboard Admin') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link href="{{ route('admin.transaksi') }}"
+                </x-common.responsive-nav-link>
+                <x-common.responsive-nav-link href="{{ route('admin.transaksi') }}"
                     :active="request()->routeIs('admin.transaksi')">
                     {{ __('Persetujuan Transaksi') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link href="{{ route('admin.katalog') }}" :active="request()->routeIs('admin.katalog')">
+                </x-common.responsive-nav-link>
+                <x-common.responsive-nav-link href="{{ route('admin.katalog') }}" :active="request()->routeIs('admin.katalog')">
                     {{ __('Katalog Admin') }}
-                </x-responsive-nav-link>
+                </x-common.responsive-nav-link>
             @else
-                <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                <x-common.responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link href="{{ route('penjemputan') }}" :active="request()->routeIs('penjemputan')">
+                </x-common.responsive-nav-link>
+                <x-common.responsive-nav-link href="{{ route('penjemputan') }}" :active="request()->routeIs('penjemputan')">
                     {{ __('Penjemputan') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link href="{{ route('penjemputan.history') }}"
+                </x-common.responsive-nav-link>
+                <x-common.responsive-nav-link href="{{ route('penjemputan.history') }}"
                     :active="request()->routeIs('penjemputan.history')">
                     {{ __('Riwayat Penjemputan') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link href="{{ route('katalog') }}" :active="request()->routeIs('katalog')">
+                </x-common.responsive-nav-link>
+                <x-common.responsive-nav-link href="{{ route('katalog') }}" :active="request()->routeIs('katalog')">
                     {{ __('Katalog') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link href="{{ route('poin') }}" :active="request()->routeIs('poin')">
+                </x-common.responsive-nav-link>
+                <x-common.responsive-nav-link href="{{ route('poin') }}" :active="request()->routeIs('poin')">
                     {{ __('Poin') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link href="{{ route('penarikan') }}" :active="request()->routeIs('penarikan')">
+                </x-common.responsive-nav-link>
+                <x-common.responsive-nav-link href="{{ route('penarikan') }}" :active="request()->routeIs('penarikan')">
                     {{ __('Penarikan') }}
-                </x-responsive-nav-link>
+                </x-common.responsive-nav-link>
             @endif
         </div>
 
@@ -257,24 +257,24 @@
 
             <div class="mt-3 space-y-1">
                 <!-- Account Management -->
-                <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
+                <x-common.responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
                     {{ __('Profile') }}
-                </x-responsive-nav-link>
+                </x-common.responsive-nav-link>
 
                 @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
-                    <x-responsive-nav-link href="{{ route('api-tokens.index') }}"
+                    <x-common.responsive-nav-link href="{{ route('api-tokens.index') }}"
                         :active="request()->routeIs('api-tokens.index')">
                         {{ __('API Tokens') }}
-                    </x-responsive-nav-link>
+                    </x-common.responsive-nav-link>
                 @endif
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}" x-data>
                     @csrf
 
-                    <x-responsive-nav-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
+                    <x-common.responsive-nav-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
                         {{ __('Log Out') }}
-                    </x-responsive-nav-link>
+                    </x-common.responsive-nav-link>
                 </form>
 
                 <!-- Team Management -->
@@ -286,15 +286,15 @@
                     </div>
 
                     <!-- Team Settings -->
-                    <x-responsive-nav-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}"
+                    <x-common.responsive-nav-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}"
                         :active="request()->routeIs('teams.show')">
                         {{ __('Team Settings') }}
-                    </x-responsive-nav-link>
+                    </x-common.responsive-nav-link>
 
                     @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
-                        <x-responsive-nav-link href="{{ route('teams.create') }}" :active="request()->routeIs('teams.create')">
+                        <x-common.responsive-nav-link href="{{ route('teams.create') }}" :active="request()->routeIs('teams.create')">
                             {{ __('Create New Team') }}
-                        </x-responsive-nav-link>
+                        </x-common.responsive-nav-link>
                     @endcan
 
                     <!-- Team Switcher -->
@@ -306,7 +306,7 @@
                         </div>
 
                         @foreach (Auth::user()->allTeams() as $team)
-                            <x-switchable-team :team="$team" component="responsive-nav-link" />
+                            <x-common.switchable-team :team="$team" component="responsive-nav-link" />
                         @endforeach
                     @endif
                 @endif

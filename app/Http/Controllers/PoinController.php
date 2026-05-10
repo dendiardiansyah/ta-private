@@ -20,7 +20,7 @@ class PoinController extends Controller
 
         // Kirim data poin ke view
 
-        return view('poin', compact('poinRecords'));
+        return view('user.poin', compact('poinRecords'));
     }
 
     // Method untuk menangani penarikan poin

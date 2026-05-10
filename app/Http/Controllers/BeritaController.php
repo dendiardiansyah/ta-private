@@ -35,7 +35,7 @@ class BeritaController extends Controller
             })
             ->values();
 
-        return view('dashboard', compact('articles'));
+        return view('common.dashboard', compact('articles'));
     }
 
 

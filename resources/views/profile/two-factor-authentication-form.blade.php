@@ -1,4 +1,4 @@
-<x-action-section>
+<x-common.action-section>
     <x-slot name="title">
         {{ __('Two Factor Authentication') }}
     </x-slot>
@@ -50,13 +50,13 @@
 
                 @if ($showingConfirmation)
                     <div class="mt-4">
-                        <x-label for="code" value="{{ __('Code') }}" />
+                        <x-common.label for="code" value="{{ __('Code') }}" />
 
-                        <x-input id="code" type="text" name="code" class="block mt-1 w-1/2" inputmode="numeric" autofocus autocomplete="one-time-code"
+                        <x-common.input id="code" type="text" name="code" class="block mt-1 w-1/2" inputmode="numeric" autofocus autocomplete="one-time-code"
                             wire:model="code"
                             wire:keydown.enter="confirmTwoFactorAuthentication" />
 
-                        <x-input-error for="code" class="mt-2" />
+                        <x-common.input-error for="code" class="mt-2" />
                     </div>
                 @endif
             @endif
@@ -78,47 +78,47 @@
 
         <div class="mt-5">
             @if (! $this->enabled)
-                <x-confirms-password wire:then="enableTwoFactorAuthentication">
-                    <x-button type="button" wire:loading.attr="disabled">
+                <x-common.confirms-password wire:then="enableTwoFactorAuthentication">
+                    <x-common.button type="button" wire:loading.attr="disabled">
                         {{ __('Enable') }}
-                    </x-button>
-                </x-confirms-password>
+                    </x-common.button>
+                </x-common.confirms-password>
             @else
                 @if ($showingRecoveryCodes)
-                    <x-confirms-password wire:then="regenerateRecoveryCodes">
-                        <x-secondary-button class="me-3">
+                    <x-common.confirms-password wire:then="regenerateRecoveryCodes">
+                        <x-common.secondary-button class="me-3">
                             {{ __('Regenerate Recovery Codes') }}
-                        </x-secondary-button>
-                    </x-confirms-password>
+                        </x-common.secondary-button>
+                    </x-common.confirms-password>
                 @elseif ($showingConfirmation)
-                    <x-confirms-password wire:then="confirmTwoFactorAuthentication">
-                        <x-button type="button" class="me-3" wire:loading.attr="disabled">
+                    <x-common.confirms-password wire:then="confirmTwoFactorAuthentication">
+                        <x-common.button type="button" class="me-3" wire:loading.attr="disabled">
                             {{ __('Confirm') }}
-                        </x-button>
-                    </x-confirms-password>
+                        </x-common.button>
+                    </x-common.confirms-password>
                 @else
-                    <x-confirms-password wire:then="showRecoveryCodes">
-                        <x-secondary-button class="me-3">
+                    <x-common.confirms-password wire:then="showRecoveryCodes">
+                        <x-common.secondary-button class="me-3">
                             {{ __('Show Recovery Codes') }}
-                        </x-secondary-button>
-                    </x-confirms-password>
+                        </x-common.secondary-button>
+                    </x-common.confirms-password>
                 @endif
 
                 @if ($showingConfirmation)
-                    <x-confirms-password wire:then="disableTwoFactorAuthentication">
-                        <x-secondary-button wire:loading.attr="disabled">
+                    <x-common.confirms-password wire:then="disableTwoFactorAuthentication">
+                        <x-common.secondary-button wire:loading.attr="disabled">
                             {{ __('Cancel') }}
-                        </x-secondary-button>
-                    </x-confirms-password>
+                        </x-common.secondary-button>
+                    </x-common.confirms-password>
                 @else
-                    <x-confirms-password wire:then="disableTwoFactorAuthentication">
-                        <x-danger-button wire:loading.attr="disabled">
+                    <x-common.confirms-password wire:then="disableTwoFactorAuthentication">
+                        <x-common.danger-button wire:loading.attr="disabled">
                             {{ __('Disable') }}
-                        </x-danger-button>
-                    </x-confirms-password>
+                        </x-common.danger-button>
+                    </x-common.confirms-password>
                 @endif
 
             @endif
         </div>
     </x-slot>
-</x-action-section>
+</x-common.action-section>

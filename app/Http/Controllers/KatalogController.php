@@ -10,6 +10,6 @@ class KatalogController extends Controller
     {
         $jenisSampahs = JenisSampah::all();
 
-        return view('katalog', compact('jenisSampahs'));
+        return view('user.katalog', compact('jenisSampahs'));
     }
 }

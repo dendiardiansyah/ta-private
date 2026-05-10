@@ -33,7 +33,7 @@
 </style>
 
 <body class="font-sans antialiased ">
-    <x-banner />
+    <x-common.banner />
 
     <div class="min-h-screen bg-white ">
         @livewire('navigation-menu')

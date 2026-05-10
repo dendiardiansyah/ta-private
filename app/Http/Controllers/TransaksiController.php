@@ -19,7 +19,7 @@ class TransaksiController extends Controller
         // dd($jenisSampah);
 
         // Mengirim data jenis sampah ke view
-        return view('penjemputan', compact('jenisSampah'));
+        return view('user.penjemputan', compact('jenisSampah'));
     }
 
     // Menyimpan transaksi baru ke database
@@ -70,7 +70,7 @@ class TransaksiController extends Controller
             ->get();
 
         // Kirim data transaksi dan poin ke view
-        return view('riwayat_penjemputan', compact('transaksis'));
+        return view('user.riwayat_penjemputan', compact('transaksis'));
     }
 
 
@@ -92,7 +92,7 @@ class TransaksiController extends Controller
         $jenisSampah = JenisSampah::all();
 
         // Tampilkan tampilan form edit dengan data transaksi dan jenis sampah
-        return view('edit_penjemputan', compact('transaksi', 'jenisSampah'));
+        return view('user.edit_penjemputan', compact('transaksi', 'jenisSampah'));
     }
 
     public function update(Request $request, $transaksi_id)

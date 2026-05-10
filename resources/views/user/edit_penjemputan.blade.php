@@ -38,9 +38,9 @@
                     value="{{ old('tanggal_transaksi', $transaksi->tanggal_transaksi) }}" required>
             </div>
 
-            <x-button>
+            <x-common.button>
                 {{ __('Perbarui') }}
-            </x-button>
+            </x-common.button>
         </form>
     </div>
 </x-app-layout>

@@ -1,4 +1,4 @@
-<x-form-section submit="updateProfileInformation">
+<x-common.form-section submit="updateProfileInformation">
     <x-slot name="title">
         {{ __('Informasi Akun') }}
     </x-slot>
@@ -24,7 +24,7 @@
                                     reader.readAsDataURL($refs.photo.files[0]);
                             " />
 
-            <x-label for="photo" value="{{ __('Photo') }}" />
+            <x-common.label for="photo" value="{{ __('Photo') }}" />
 
             <!-- Current Profile Photo -->
             <div class="mt-2" x-show="! photoPreview">
@@ -38,45 +38,45 @@
                 </span>
             </div>
 
-            <x-secondary-button class="mt-2 me-2" type="button" x-on:click.prevent="$refs.photo.click()">
+            <x-common.secondary-button class="mt-2 me-2" type="button" x-on:click.prevent="$refs.photo.click()">
                 {{ __('Select A New Photo') }}
-            </x-secondary-button>
+            </x-common.secondary-button>
 
             @if ($this->user->profile_photo_path)
-            <x-secondary-button type="button" class="mt-2" wire:click="deleteProfilePhoto">
+            <x-common.secondary-button type="button" class="mt-2" wire:click="deleteProfilePhoto">
                 {{ __('Remove Photo') }}
-            </x-secondary-button>
+            </x-common.secondary-button>
             @endif
 
-            <x-input-error for="photo" class="mt-2" />
+            <x-common.input-error for="photo" class="mt-2" />
         </div>
         @endif
 
         <!-- Name -->
         <div class="col-span-6 sm:col-span-4">
-            <x-label for="name" value="{{ __('Name') }}" />
-            <x-input id="name" type="text" class="mt-1 block w-full" wire:model="state.name" required autocomplete="name" />
-            <x-input-error for="name" class="mt-2" />
+            <x-common.label for="name" value="{{ __('Name') }}" />
+            <x-common.input id="name" type="text" class="mt-1 block w-full" wire:model="state.name" required autocomplete="name" />
+            <x-common.input-error for="name" class="mt-2" />
         </div>
 
         <!-- Email -->
         <div class="col-span-6 sm:col-span-4">
-            <x-label for="email" value="{{ __('Email') }}" />
-            <x-input id="email" type="email" class="mt-1 block w-full" wire:model="state.email" required autocomplete="username" />
-            <x-input-error for="email" class="mt-2" />
+            <x-common.label for="email" value="{{ __('Email') }}" />
+            <x-common.input id="email" type="email" class="mt-1 block w-full" wire:model="state.email" required autocomplete="username" />
+            <x-common.input-error for="email" class="mt-2" />
 
             <!-- Nomor Telepon -->
             <div class="col-span-6 sm:col-span-4 mt-4">
-                <x-label for="nomor_telepon" value="{{ __('Nomor Telepon') }}" />
-                <x-input id="nomor_telepon" type="text" class="mt-1 block w-full" wire:model="state.nomor_telepon" required />
-                <x-input-error for="nomor_telepon" class="mt-2" />
+                <x-common.label for="nomor_telepon" value="{{ __('Nomor Telepon') }}" />
+                <x-common.input id="nomor_telepon" type="text" class="mt-1 block w-full" wire:model="state.nomor_telepon" required />
+                <x-common.input-error for="nomor_telepon" class="mt-2" />
             </div>
 
             <!-- Alamat Penjemputan -->
             <div class="col-span-6 sm:col-span-4 mt-4">
-                <x-label for="alamat_penjemputan" value="{{ __('Alamat Penjemputan') }}" />
-                <x-input id="alamat_penjemputan" type="text" class="mt-1 block w-full" wire:model="state.alamat_penjemputan" required />
-                <x-input-error for="alamat_penjemputan" class="mt-2" />
+                <x-common.label for="alamat_penjemputan" value="{{ __('Alamat Penjemputan') }}" />
+                <x-common.input id="alamat_penjemputan" type="text" class="mt-1 block w-full" wire:model="state.alamat_penjemputan" required />
+                <x-common.input-error for="alamat_penjemputan" class="mt-2" />
             </div>
 
             @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::emailVerification()) && ! $this->user->hasVerifiedEmail())
@@ -98,12 +98,12 @@
     </x-slot>
 
     <x-slot name="actions">
-        <x-action-message class="me-3" on="saved">
+        <x-common.action-message class="me-3" on="saved">
             {{ __('Saved.') }}
-        </x-action-message>
+        </x-common.action-message>
 
-        <x-button wire:loading.attr="disabled" wire:target="photo">
+        <x-common.button wire:loading.attr="disabled" wire:target="photo">
             {{ __('Save') }}
-        </x-button>
+        </x-common.button>
     </x-slot>
-</x-form-section>
+</x-common.form-section>

@@ -15,7 +15,7 @@ class AdminTransaksiController extends Controller
             ->orderByDesc('transaksi_id')
             ->paginate(10);
 
-        return view('transaksi_pelaku_usaha', compact('transaksis'));
+        return view('admin.transaksi', compact('transaksis'));
     }
 
     public function update(Request $request, int $transaksi_id)

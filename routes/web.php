@@ -12,7 +12,7 @@ use App\Http\Controllers\Admin\AdminTransaksiController;
 use App\Http\Controllers\Petugas\PetugasTransaksiController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('common.welcome');
 });
 
 Route::middleware('guest')->group(function () {
