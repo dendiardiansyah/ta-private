@@ -37,6 +37,7 @@ class User extends Authenticatable
         'total_poin', // Menyimpan total poin pengguna
         'alamat',
         'nomor_telepon',
+        'status',
     ];
 
     /**

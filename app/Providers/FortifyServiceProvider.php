@@ -47,6 +47,11 @@ class FortifyServiceProvider extends ServiceProvider
                 return null;
             }
 
+            if ($user->status === 'pending') {
+                session()->flash('status', 'Akun Anda masih menunggu persetujuan Admin.');
+                return null;
+            }
+
             return $user;
         });
 

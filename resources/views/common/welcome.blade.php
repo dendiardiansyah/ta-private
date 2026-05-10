@@ -83,6 +83,12 @@
                     <p class="text-sm text-gray-500">Silakan masuk atau buat akun baru.</p>
                 </div>
 
+                @if (session('status'))
+                    <div class="mb-4 font-medium text-sm text-green-600 bg-green-100 p-3 rounded-lg text-center">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
                 <div class="bg-gray-100 p-1.5 rounded-2xl flex mb-8">
                     <button id="tab-login" onclick="switchTab('login')"
                         class="w-1/2 py-2.5 rounded-xl text-sm font-bold text-[#0e6e36] bg-white shadow-sm transition-all">Masuk</button>
@@ -132,6 +138,18 @@
                         <input type="email" name="email"
                             class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#0e6e36]/30 focus:border-[#0e6e36] transition-all outline-none text-gray-800"
                             required placeholder="nama@email.com">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider">Role</label>
+                        <select name="role"
+                            class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#0e6e36]/30 focus:border-[#0e6e36] transition-all outline-none text-gray-800"
+                            required>
+                            <option value="Nasabah">Nasabah</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Pelaku Usaha">Pelaku Usaha</option>
+                            <option value="Petugas Penjemputan">Petugas Penjemputan</option>
+                        </select>
                     </div>
 
                     <div class="space-y-1.5">
@@ -214,7 +232,10 @@
         // Auto-open the correct tab for better UX.
         (function bootAuthModalFromQuery() {
             const auth = new URLSearchParams(window.location.search).get('auth');
-            if (auth === 'login' || auth === 'register') {
+            const hasStatus = {{ session('status') ? 'true' : 'false' }};
+            if (hasStatus) {
+                openModal('login');
+            } else if (auth === 'login' || auth === 'register') {
                 openModal(auth);
             }
         })();

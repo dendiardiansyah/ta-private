@@ -46,6 +46,8 @@ Route::middleware([
 
 Route::get('/katalog', [KatalogController::class, 'index'])->name('katalog');
 
+
+
 // Admin routes (previously mislabeled as "pelaku usaha")
 Route::prefix('admin')->name('admin.')->middleware([
     'auth',
@@ -64,6 +66,16 @@ Route::prefix('admin')->name('admin.')->middleware([
     Route::get('/katalog/edit/{jenis_sampah_id}', [AdminKatalogController::class, 'edit'])->name('katalog.edit');
     Route::put('/katalog/edit/{jenis_sampah_id}', [AdminKatalogController::class, 'update'])->name('katalog.update');
     Route::delete('/katalog/delete/{jenis_sampah_id}', [AdminKatalogController::class, 'destroy'])->name('katalog.delete');
+
+    // Admin User Approval
+    Route::get('/approvals', [\App\Http\Controllers\Admin\AdminUserApprovalController::class, 'index'])->name('approvals.index');
+    Route::post('/approvals/{user}', [\App\Http\Controllers\Admin\AdminUserApprovalController::class, 'approve'])->name('approvals.approve');
+
+    // Admin Users Management
+    Route::get('/users', [\App\Http\Controllers\Admin\AdminUserController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}/edit', [\App\Http\Controllers\Admin\AdminUserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [\App\Http\Controllers\Admin\AdminUserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [\App\Http\Controllers\Admin\AdminUserController::class, 'destroy'])->name('users.destroy');
 });
 
 // Petugas routes

@@ -3,7 +3,10 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
+use App\Models\Role;
+use App\Mail\AdminRegistrationNotification;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
@@ -19,25 +22,52 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        // Validasi input termasuk alamat_penjemputan dan nomor_telepon
-
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
-            // 'alamat_penjemputan' => ['required', 'string', 'max:255'],
-            // 'nomor_telepon' => ['required', 'string', 'max:15'], // Anda bisa menyesuaikan panjang maksimal nomor telepon
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
+            'role' => ['required', 'string', 'in:Nasabah,Admin,Pelaku Usaha,Petugas Penjemputan'],
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
+        $roleNameString = $input['role'];
+        $roleSlugMap = [
+            'Nasabah' => 'nasabah',
+            'Admin' => 'admin',
+            'Pelaku Usaha' => 'pelaku_usaha',
+            'Petugas Penjemputan' => 'petugas',
+        ];
+        $roleSlug = $roleSlugMap[$roleNameString];
 
-        // Membuat user baru termasuk alamat_penjemputan dan nomor_telepon
-        return User::create([
+        $status = 'approved';
+        if ($roleSlug !== 'nasabah') {
+            $status = 'pending';
+        }
+
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
-            // 'alamat_penjemputan' => $input['alamat_penjemputan'], // Menyimpan alamat penjemputan
-            // 'nomor_telepon' => $input['nomor_telepon'], // Menyimpan nomor telepon
+            'status' => $status,
         ]);
+
+        $roleModel = Role::where('name', $roleSlug)->first();
+        if ($roleModel) {
+            $user->roles()->attach($roleModel->id);
+        }
+
+        if ($status === 'pending') {
+            // Kirim email ke semua admin
+            $admins = User::whereHas('roles', function ($q) {
+                $q->where('name', 'admin');
+            })->where('status', 'approved')->get();
+
+            foreach ($admins as $admin) {
+                Mail::to($admin->email)->send(new AdminRegistrationNotification($user));
+            }
+        }
+
+        return $user;
     }
 }
+

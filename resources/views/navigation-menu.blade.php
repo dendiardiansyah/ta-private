@@ -13,23 +13,33 @@
                 <!-- Navigation Links -->
                 @if(Auth::check() && Auth::user()->hasRole('petugas'))
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-common.nav-link href="{{ route('petugas.index') }}" :active="request()->routeIs('petugas.index')">
+                        <x-common.nav-link href="{{ route('petugas.index') }}"
+                            :active="request()->routeIs('petugas.index')">
                             {{ __('Daftar Penugasan') }}
                         </x-common.nav-link>
                     </div>
                 @elseif(Auth::check() && Auth::user()->hasRole('admin'))
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-common.nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
+                        <x-common.nav-link href="{{ route('admin.dashboard') }}"
+                            :active="request()->routeIs('admin.dashboard')">
                             {{ __('Dashboard Admin') }}
                         </x-common.nav-link>
                     </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-common.nav-link href="{{ route('admin.transaksi') }}" :active="request()->routeIs('admin.transaksi')">
-                            {{ __('Persetujuan Transaksi') }}
+                        <x-common.nav-link href="{{ route('admin.approvals.index') }}"
+                            :active="request()->routeIs('admin.approvals.index')">
+                            {{ __('User Approval') }}
                         </x-common.nav-link>
                     </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-common.nav-link href="{{ route('admin.katalog') }}" :active="request()->routeIs('admin.katalog')">
+                        <x-common.nav-link href="{{ route('admin.users.index') }}"
+                            :active="request()->routeIs('admin.users.index')">
+                            {{ __('User Management') }}
+                        </x-common.nav-link>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-common.nav-link href="{{ route('admin.katalog') }}"
+                            :active="request()->routeIs('admin.katalog')">
                             {{ __('Katalog Admin') }}
                         </x-common.nav-link>
                     </div>
@@ -201,7 +211,8 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             @if(Auth::check() && Auth::user()->hasRole('petugas'))
-                <x-common.responsive-nav-link href="{{ route('petugas.index') }}" :active="request()->routeIs('petugas.index')">
+                <x-common.responsive-nav-link href="{{ route('petugas.index') }}"
+                    :active="request()->routeIs('petugas.index')">
                     {{ __('Daftar Penugasan') }}
                 </x-common.responsive-nav-link>
             @elseif(Auth::check() && Auth::user()->hasRole('admin'))
@@ -209,11 +220,16 @@
                     :active="request()->routeIs('admin.dashboard')">
                     {{ __('Dashboard Admin') }}
                 </x-common.responsive-nav-link>
-                <x-common.responsive-nav-link href="{{ route('admin.transaksi') }}"
-                    :active="request()->routeIs('admin.transaksi')">
-                    {{ __('Persetujuan Transaksi') }}
+                <x-common.responsive-nav-link href="{{ route('admin.approvals.index') }}"
+                    :active="request()->routeIs('admin.approvals.index')">
+                    {{ __('User Approval') }}
                 </x-common.responsive-nav-link>
-                <x-common.responsive-nav-link href="{{ route('admin.katalog') }}" :active="request()->routeIs('admin.katalog')">
+                <x-common.responsive-nav-link href="{{ route('admin.users.index') }}"
+                    :active="request()->routeIs('admin.users.index')">
+                    {{ __('User Management') }}
+                </x-common.responsive-nav-link>
+                <x-common.responsive-nav-link href="{{ route('admin.katalog') }}"
+                    :active="request()->routeIs('admin.katalog')">
                     {{ __('Katalog Admin') }}
                 </x-common.responsive-nav-link>
             @else
@@ -257,7 +273,8 @@
 
             <div class="mt-3 space-y-1">
                 <!-- Account Management -->
-                <x-common.responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
+                <x-common.responsive-nav-link href="{{ route('profile.show') }}"
+                    :active="request()->routeIs('profile.show')">
                     {{ __('Profile') }}
                 </x-common.responsive-nav-link>
 
@@ -292,7 +309,8 @@
                     </x-common.responsive-nav-link>
 
                     @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
-                        <x-common.responsive-nav-link href="{{ route('teams.create') }}" :active="request()->routeIs('teams.create')">
+                        <x-common.responsive-nav-link href="{{ route('teams.create') }}"
+                            :active="request()->routeIs('teams.create')">
                             {{ __('Create New Team') }}
                         </x-common.responsive-nav-link>
                     @endcan
