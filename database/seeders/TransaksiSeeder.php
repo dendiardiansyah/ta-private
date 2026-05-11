@@ -16,29 +16,44 @@ class TransaksiSeeder extends Seeder
         $faker = Faker::create('id_ID');
 
         $userRoleId = Role::query()->where('name', 'user')->value('id');
-        $adminRoleId = Role::query()->where('name', 'admin')->value('id');
+        $petugasRoleId = Role::query()->where('name', 'petugas')->value('id');
 
         $nasabahIds = $userRoleId
             ? User::whereHas('roles', fn($q) => $q->where('roles.id', $userRoleId))->pluck('id')->all()
             : [];
         $jenisSampahIds = JenisSampah::pluck('jenis_sampah_id')->all();
-        $adminIds = $adminRoleId
-            ? User::whereHas('roles', fn($q) => $q->where('roles.id', $adminRoleId))->pluck('id')->all()
+        $petugasIds = $petugasRoleId
+            ? User::whereHas('roles', fn($q) => $q->where('roles.id', $petugasRoleId))->pluck('id')->all()
             : [];
 
-        if (empty($nasabahIds) || empty($jenisSampahIds) || empty($adminIds)) {
+        if (empty($nasabahIds) || empty($jenisSampahIds)) {
             return;
         }
 
+        // Weighted-ish distribution so seeded dashboards look realistic
+        $statusPool = [
+            'Menunggu Petugas',
+            'Menunggu Petugas',
+            'Menunggu Petugas',
+            'Menunggu Petugas',
+            'Menuju Lokasi',
+            'Menuju Lokasi',
+            'Sedang Diangkut',
+            'Sedang Diangkut',
+            'Selesai',
+        ];
+
         for ($i = 0; $i < 25; $i++) {
+            $status = $faker->randomElement($statusPool);
+
             Transaksi::create([
                 'nasabah_id' => $faker->randomElement($nasabahIds),
                 'jenis_sampah_id' => $faker->randomElement($jenisSampahIds),
-                'pelaku_usaha_id' => $faker->randomElement($adminIds),
+                'petugas_id' => empty($petugasIds) ? null : $faker->randomElement($petugasIds),
                 'alamat_penjemputan' => $faker->address,
                 'jumlah' => $faker->numberBetween(1, 50),
                 'tanggal_transaksi' => $faker->dateTimeBetween('-2 months', 'now')->format('Y-m-d'),
-                'status' => $faker->randomElement(['pending', 'disetujui', 'ditolak']),
+                'status' => $status,
             ]);
         }
     }
