@@ -12,7 +12,12 @@ class AdminUserApprovalController extends Controller
 {
     public function index()
     {
-        $users = User::with('roles')->where('status', 'pending')->paginate(10);
+        $users = User::with('roles')
+            ->where('status', 'pending')
+            ->whereHas('roles', function ($query) {
+                $query->whereNotIn('name', ['user', 'nasabah']);
+            })
+            ->paginate(10);
         return view('admin.user-approval.index', compact('users'));
     }
 

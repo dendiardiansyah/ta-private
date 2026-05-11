@@ -114,6 +114,16 @@ class User extends Authenticatable
         foreach ($roleNames as $name) {
             $expanded[] = $name;
 
+            // Backward-compat aliasing: some code/UX refers to Nasabah as "nasabah",
+            // while DB/seeders use "user".
+            if ($name === 'user') {
+                $expanded[] = 'nasabah';
+            }
+
+            if ($name === 'nasabah') {
+                $expanded[] = 'user';
+            }
+
             if ($name === 'admin') {
                 $expanded[] = 'pelaku_usaha';
             }

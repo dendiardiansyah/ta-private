@@ -10,7 +10,7 @@
     Silakan klik tombol di bawah ini untuk menyetujui pengguna ini secara langsung atau kunjungi halaman Penerimaan
     Registrasi di Dashboard Admin.
 
-    <x-mail::button :url="route('admin.users.approve', ['user' => $user->id])">
+    <x-mail::button :url="route('admin.approvals.approve.link', ['user' => $user->id])">
         Setujui Pengguna
     </x-mail::button>
 

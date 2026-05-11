@@ -8,7 +8,6 @@ use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\PoinController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminKatalogController;
-use App\Http\Controllers\Admin\AdminTransaksiController;
 use App\Http\Controllers\Petugas\PetugasTransaksiController;
 
 Route::get('/', function () {
@@ -66,6 +65,7 @@ Route::prefix('admin')->name('admin.')->middleware([
 
     // Admin User Approval
     Route::get('/approvals', [\App\Http\Controllers\Admin\AdminUserApprovalController::class, 'index'])->name('approvals.index');
+    Route::get('/approvals/{user}/approve', [\App\Http\Controllers\Admin\AdminUserApprovalController::class, 'approve'])->name('approvals.approve.link');
     Route::post('/approvals/{user}', [\App\Http\Controllers\Admin\AdminUserApprovalController::class, 'approve'])->name('approvals.approve');
 
     // Admin Users Management

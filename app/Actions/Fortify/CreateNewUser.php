@@ -32,7 +32,8 @@ class CreateNewUser implements CreatesNewUsers
 
         $roleNameString = $input['role'];
         $roleSlugMap = [
-            'Nasabah' => 'nasabah',
+            // Existing DB/seed uses role name `user` for Nasabah.
+            'Nasabah' => 'user',
             'Admin' => 'admin',
             'Pelaku Usaha' => 'pelaku_usaha',
             'Petugas Penjemputan' => 'petugas',
@@ -40,7 +41,7 @@ class CreateNewUser implements CreatesNewUsers
         $roleSlug = $roleSlugMap[$roleNameString];
 
         $status = 'approved';
-        if ($roleSlug !== 'nasabah') {
+        if ($roleSlug !== 'user') {
             $status = 'pending';
         }
 
@@ -51,10 +52,8 @@ class CreateNewUser implements CreatesNewUsers
             'status' => $status,
         ]);
 
-        $roleModel = Role::where('name', $roleSlug)->first();
-        if ($roleModel) {
-            $user->roles()->attach($roleModel->id);
-        }
+        $roleModel = Role::query()->firstOrCreate(['name' => $roleSlug]);
+        $user->roles()->attach($roleModel->id);
 
         if ($status === 'pending') {
             // Kirim email ke semua admin
