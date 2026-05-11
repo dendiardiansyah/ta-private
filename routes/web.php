@@ -57,9 +57,6 @@ Route::prefix('admin')->name('admin.')->middleware([
 ])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/transaksi', [AdminTransaksiController::class, 'index'])->name('transaksi');
-    Route::put('/transaksi/{transaksi_id}', [AdminTransaksiController::class, 'update'])->name('transaksi.update');
-
     Route::get('/katalog', [AdminKatalogController::class, 'index'])->name('katalog');
     Route::get('/katalog/create', [AdminKatalogController::class, 'create'])->name('katalog.create');
     Route::post('/katalog/store', [AdminKatalogController::class, 'store'])->name('katalog.store');

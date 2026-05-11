@@ -1,131 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Katalog Sampah') }}
+        </h2>
+    </x-slot>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halaman Katalog</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<style>
-    .navbar-brand img {
-        width: 30px;
-        /* Adjust the size of the logo */
-        height: auto;
-        margin-right: 10px;
-        /* Spacing between logo and text */
-    }
-</style>
-
-<body>
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('admin.dashboard') }}">
-                <img src="{{ asset('image/logomain.png') }}" alt="Logo">Dashboard</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.transaksi') }}">Transaksi</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('admin.katalog') }}">Katalog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('logout') }}"
-                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-                    </li>
-                </ul>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+                    {{ session('success') }}
+                </div>
+            @endif
+            <div class="flex justify-end">
+                <a href="{{ route('admin.katalog.create') }}"
+                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    + Tambah Jenis Sampah
+                </a>
             </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="container mt-4">
-
-
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="text-center">Katalog Sampah</h1>
-            <!-- Button Tambah -->
-            <a href="{{ route('admin.katalog.create') }}" class="btn btn-outline-success">+ Tambah Jenis Sampah</a>
-        </div>
-        <div class="card">
-            <div class="card-header">
-                <h4>Jenis Sampah yang Tersedia</h4>
-            </div>
-            <div class="card-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama Sampah</th>
-                            <th>Deskripsi</th>
-                            <th>Harga</th>
-                            <th>Gambar</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($jenisSampahs as $jenisSampah)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $jenisSampah->nama_jenis }}</td>
-                                <td>{{ $jenisSampah->deskripsi }}</td>
-                                <td>{{ $jenisSampah->harga_sampah }}</td>
-                                <td>
-                                    <!-- Menampilkan Nama Gambar sebagai teks -->
-                                    @if($jenisSampah->gambar)
-                                        <span>{{ $jenisSampah->gambar }}</span>
-                                    @else
-                                        <span>No Image</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <div class="button-container" style="display: flex; gap: 5px;">
-                                        <!-- Tombol Edit -->
-                                        <a href="{{ route('admin.katalog.edit', $jenisSampah->jenis_sampah_id) }}"
-                                            class="btn btn-warning btn-sm " style="width: 60px;">Edit</a>
-
-                                        <!-- Tombol Delete -->
-                                        <form action="{{ route('admin.katalog.delete', $jenisSampah->jenis_sampah_id) }}"
-                                            method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm btn-custom">Delete</button>
-                                        </form>
-                                    </div>
-
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-
-
-                </table>
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 border-b border-gray-200">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
+                                <tr>
+                                    <th class="px-6 py-3">No</th>
+                                    <th class="px-6 py-3">Nama Sampah</th>
+                                    <th class="px-6 py-3">Deskripsi</th>
+                                    <th class="px-6 py-3">Harga</th>
+                                    <th class="px-6 py-3">Gambar</th>
+                                    <th class="px-6 py-3">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($jenisSampahs as $jenisSampah)
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <td class="px-6 py-4">{{ $loop->iteration }}</td>
+                                        <td class="px-6 py-4">{{ $jenisSampah->nama_jenis }}</td>
+                                        <td class="px-6 py-4">{{ $jenisSampah->deskripsi }}</td>
+                                        <td class="px-6 py-4">{{ $jenisSampah->harga_sampah }}</td>
+                                        <td class="px-6 py-4">
+                                            {{ $jenisSampah->gambar ? $jenisSampah->gambar : 'No Image' }}
+                                        </td>
+                                        <td class="px-6 py-4 flex space-x-2">
+                                            <a href="{{ route('admin.katalog.edit', $jenisSampah->jenis_sampah_id) }}"
+                                                class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded">Edit</a>
+                                            <form
+                                                action="{{ route('admin.katalog.delete', $jenisSampah->jenis_sampah_id) }}"
+                                                method="POST" onsubmit="return confirm('Yakin hapus?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- Logout Form -->
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-
-</html>
+</x-app-layout>
