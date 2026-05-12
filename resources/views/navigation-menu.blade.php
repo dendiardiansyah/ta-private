@@ -18,6 +18,19 @@
                             {{ __('Daftar Penugasan') }}
                         </x-common.nav-link>
                     </div>
+                @elseif(Auth::check() && Auth::user()->hasRole('pelaku_usaha'))
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-common.nav-link href="{{ route('pelaku_usaha.dashboard') }}"
+                            :active="request()->routeIs('pelaku_usaha.dashboard')">
+                            {{ __('Dashboard') }}
+                        </x-common.nav-link>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-common.nav-link href="{{ route('pelaku_usaha.products.index') }}"
+                            :active="request()->routeIs('pelaku_usaha.products.*')">
+                            {{ __('Produk') }}
+                        </x-common.nav-link>
+                    </div>
                 @elseif(Auth::check() && Auth::user()->hasRole('admin'))
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-common.nav-link href="{{ route('admin.dashboard') }}"
@@ -41,6 +54,12 @@
                         <x-common.nav-link href="{{ route('admin.katalog') }}"
                             :active="request()->routeIs('admin.katalog')">
                             {{ __('Katalog Admin') }}
+                        </x-common.nav-link>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-common.nav-link href="{{ route('admin.settings.point-rate.edit') }}"
+                            :active="request()->routeIs('admin.settings.point-rate.*')">
+                            {{ __('Kurs Poin') }}
                         </x-common.nav-link>
                     </div>
                 @else
@@ -215,6 +234,15 @@
                     :active="request()->routeIs('petugas.index')">
                     {{ __('Daftar Penugasan') }}
                 </x-common.responsive-nav-link>
+            @elseif(Auth::check() && Auth::user()->hasRole('pelaku_usaha'))
+                <x-common.responsive-nav-link href="{{ route('pelaku_usaha.dashboard') }}"
+                    :active="request()->routeIs('pelaku_usaha.dashboard')">
+                    {{ __('Dashboard') }}
+                </x-common.responsive-nav-link>
+                <x-common.responsive-nav-link href="{{ route('pelaku_usaha.products.index') }}"
+                    :active="request()->routeIs('pelaku_usaha.products.*')">
+                    {{ __('Produk') }}
+                </x-common.responsive-nav-link>
             @elseif(Auth::check() && Auth::user()->hasRole('admin'))
                 <x-common.responsive-nav-link href="{{ route('admin.dashboard') }}"
                     :active="request()->routeIs('admin.dashboard')">
@@ -231,6 +259,10 @@
                 <x-common.responsive-nav-link href="{{ route('admin.katalog') }}"
                     :active="request()->routeIs('admin.katalog')">
                     {{ __('Katalog Admin') }}
+                </x-common.responsive-nav-link>
+                <x-common.responsive-nav-link href="{{ route('admin.settings.point-rate.edit') }}"
+                    :active="request()->routeIs('admin.settings.point-rate.*')">
+                    {{ __('Kurs Poin') }}
                 </x-common.responsive-nav-link>
             @else
                 <x-common.responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">

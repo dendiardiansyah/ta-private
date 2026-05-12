@@ -75,6 +75,10 @@
                     </div>
                 @endforelse
             </div>
+
+            <hr class="my-5">
+
+            @include('common.partials.product-katalog', ['products' => $products ?? collect(), 'pointRate' => $pointRate ?? 1000])
         </div>
     </div>
 </x-app-layout>

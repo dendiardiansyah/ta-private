@@ -8,7 +8,11 @@ use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\PoinController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminKatalogController;
+use App\Http\Controllers\Admin\PointRateController;
 use App\Http\Controllers\Petugas\PetugasTransaksiController;
+use App\Http\Controllers\PelakuUsaha\DashboardController as PelakuUsahaDashboardController;
+use App\Http\Controllers\PelakuUsaha\ProductController as PelakuUsahaProductController;
+use App\Http\Controllers\ProductPurchaseController;
 
 Route::get('/', function () {
     return view('common.welcome');
@@ -56,6 +60,10 @@ Route::prefix('admin')->name('admin.')->middleware([
 ])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
+    // Point rate settings
+    Route::get('/settings/point-rate', [PointRateController::class, 'edit'])->name('settings.point-rate.edit');
+    Route::put('/settings/point-rate', [PointRateController::class, 'update'])->name('settings.point-rate.update');
+
     Route::get('/katalog', [AdminKatalogController::class, 'index'])->name('katalog');
     Route::get('/katalog/create', [AdminKatalogController::class, 'create'])->name('katalog.create');
     Route::post('/katalog/store', [AdminKatalogController::class, 'store'])->name('katalog.store');
@@ -73,6 +81,27 @@ Route::prefix('admin')->name('admin.')->middleware([
     Route::get('/users/{user}/edit', [\App\Http\Controllers\Admin\AdminUserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [\App\Http\Controllers\Admin\AdminUserController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [\App\Http\Controllers\Admin\AdminUserController::class, 'destroy'])->name('users.destroy');
+});
+
+// Pelaku Usaha routes
+Route::prefix('pelaku-usaha')->name('pelaku_usaha.')->middleware([
+    'auth',
+    config('jetstream.auth_session'),
+    'verified',
+    'role:pelaku_usaha',
+])->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('pelaku_usaha.dashboard');
+    })->name('home');
+
+    Route::get('/dashboard', [PelakuUsahaDashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/products', [PelakuUsahaProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [PelakuUsahaProductController::class, 'create'])->name('products.create');
+    Route::post('/products', [PelakuUsahaProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{product}/edit', [PelakuUsahaProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product}', [PelakuUsahaProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{product}', [PelakuUsahaProductController::class, 'destroy'])->name('products.destroy');
 });
 
 // Petugas routes
@@ -112,6 +141,9 @@ Route::middleware([
 
     // Route untuk menghapus transaksi penjemputan
     Route::delete('/penjemputan/{transaksi_id}', [TransaksiController::class, 'destroy'])->name('penjemputan.destroy');
+
+    // Purchase products using points
+    Route::post('/katalog/products/{product}/buy', [ProductPurchaseController::class, 'store'])->name('katalog.products.buy');
 });
 
 // Fallback Route untuk mengalihkan halaman yang tidak relevan (404 Not Found)
@@ -123,6 +155,9 @@ Route::fallback(function () {
         }
         if ($user->hasRole('petugas')) {
             return redirect()->route('petugas.index');
+        }
+        if ($user->hasRole('pelaku_usaha')) {
+            return redirect()->route('pelaku_usaha.dashboard');
         }
         return redirect()->route('dashboard');
     }
