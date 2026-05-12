@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Mail\UserRegistrationApproved;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class AdminUserApprovalController extends Controller
