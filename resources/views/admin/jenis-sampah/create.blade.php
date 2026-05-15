@@ -28,7 +28,7 @@
                             {{ __('Nama Jenis Sampah') }} <span class="text-red-500">*</span>
                         </label>
                         <input type="text" name="nama_jenis" id="nama_jenis" value="{{ old('nama_jenis') }}"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-emerald-500 focus:outline-none @error('nama_jenis') border-red-500 @enderror"
+                            class="w-full rounded-lg border px-4 py-2 focus:border-emerald-500 focus:outline-none {{ $errors->has('nama_jenis') ? 'border-red-500' : 'border-gray-300'}}"
                             placeholder="Contoh: Plastik, Kertas, Logam">
                         @error('nama_jenis')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
@@ -41,7 +41,7 @@
                             {{ __('Deskripsi') }}
                         </label>
                         <textarea name="deskripsi" id="deskripsi" rows="4"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-emerald-500 focus:outline-none @error('deskripsi') border-red-500 @enderror"
+                            class="w-full rounded-lg border px-4 py-2 focus:border-emerald-500 focus:outline-none {{ $errors->has('deskripsi') ? 'border-red-500' : 'border-gray-300'}}"
                             placeholder="Jelaskan jenis sampah ini...">{{ old('deskripsi') }}</textarea>
                         @error('deskripsi')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
@@ -55,7 +55,7 @@
                         </label>
                         <input type="number" name="harga_sampah" id="harga_sampah" value="{{ old('harga_sampah', 0) }}"
                             step="0.01" min="0"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-emerald-500 focus:outline-none @error('harga_sampah') border-red-500 @enderror"
+                            class="w-full rounded-lg border px-4 py-2 focus:border-emerald-500 focus:outline-none {{ $errors->has('harga_sampah') ? 'border-red-500' : 'border-gray-300'}}"
                             placeholder="0">
                         @error('harga_sampah')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
@@ -68,7 +68,7 @@
                             {{ __('Gambar') }}
                         </label>
                         <input type="file" name="gambar" id="gambar" accept="image/*"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-emerald-500 focus:outline-none @error('gambar') border-red-500 @enderror">
+                            class="w-full rounded-lg border px-4 py-2 focus:border-emerald-500 focus:outline-none {{ $errors->has('gambar') ? 'border-red-500' : 'border-gray-300'}}">
                         <p class="mt-1 text-xs text-gray-500">{{ __('Format: JPEG, PNG, JPG, GIF, SVG (Max: 5MB)') }}
                         </p>
                         @error('gambar')
