@@ -108,8 +108,6 @@ class User extends Authenticatable
     {
         $roleNames = array_values(array_filter(array_map(fn($r) => strtolower(trim((string) $r)), $roleNames)));
 
-        // Backward-compat aliasing: old "pelaku_usaha" role now behaves as "admin".
-        // This keeps existing DB rows working while you transition UI + routes.
         $expanded = [];
         foreach ($roleNames as $name) {
             $expanded[] = $name;
@@ -124,13 +122,6 @@ class User extends Authenticatable
                 $expanded[] = 'user';
             }
 
-            if ($name === 'admin') {
-                $expanded[] = 'pelaku_usaha';
-            }
-
-            if ($name === 'pelaku_usaha') {
-                $expanded[] = 'admin';
-            }
         }
 
         $roleNames = array_values(array_unique(array_filter($expanded)));

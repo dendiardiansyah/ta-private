@@ -35,25 +35,25 @@
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-common.nav-link href="{{ route('admin.dashboard') }}"
                             :active="request()->routeIs('admin.dashboard')">
-                            {{ __('Dashboard Admin') }}
+                            {{ __('Dashboard') }}
+                        </x-common.nav-link>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-common.nav-link href="{{ route('admin.jenis-sampah.index') }}"
+                            :active="request()->routeIs('admin.jenis-sampah.*')">
+                            {{ __('Jenis Sampah') }}
                         </x-common.nav-link>
                     </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-common.nav-link href="{{ route('admin.approvals.index') }}"
-                            :active="request()->routeIs('admin.approvals.index')">
-                            {{ __('User Approval') }}
+                            :active="request()->routeIs('admin.approvals.*')">
+                            {{ __('Persetujuan User') }}
                         </x-common.nav-link>
                     </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-common.nav-link href="{{ route('admin.users.index') }}"
-                            :active="request()->routeIs('admin.users.index')">
-                            {{ __('User Management') }}
-                        </x-common.nav-link>
-                    </div>
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-common.nav-link href="{{ route('admin.katalog') }}"
-                            :active="request()->routeIs('admin.katalog')">
-                            {{ __('Katalog Admin') }}
+                            :active="request()->routeIs('admin.users.*')">
+                            {{ __('Manajemen User') }}
                         </x-common.nav-link>
                     </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
@@ -246,19 +246,19 @@
             @elseif(Auth::check() && Auth::user()->hasRole('admin'))
                 <x-common.responsive-nav-link href="{{ route('admin.dashboard') }}"
                     :active="request()->routeIs('admin.dashboard')">
-                    {{ __('Dashboard Admin') }}
+                    {{ __('Dashboard') }}
+                </x-common.responsive-nav-link>
+                <x-common.responsive-nav-link href="{{ route('admin.jenis-sampah.index') }}"
+                    :active="request()->routeIs('admin.jenis-sampah.*')">
+                    {{ __('Jenis Sampah') }}
                 </x-common.responsive-nav-link>
                 <x-common.responsive-nav-link href="{{ route('admin.approvals.index') }}"
-                    :active="request()->routeIs('admin.approvals.index')">
-                    {{ __('User Approval') }}
+                    :active="request()->routeIs('admin.approvals.*')">
+                    {{ __('Persetujuan User') }}
                 </x-common.responsive-nav-link>
                 <x-common.responsive-nav-link href="{{ route('admin.users.index') }}"
-                    :active="request()->routeIs('admin.users.index')">
-                    {{ __('User Management') }}
-                </x-common.responsive-nav-link>
-                <x-common.responsive-nav-link href="{{ route('admin.katalog') }}"
-                    :active="request()->routeIs('admin.katalog')">
-                    {{ __('Katalog Admin') }}
+                    :active="request()->routeIs('admin.users.*')">
+                    {{ __('Manajemen User') }}
                 </x-common.responsive-nav-link>
                 <x-common.responsive-nav-link href="{{ route('admin.settings.point-rate.edit') }}"
                     :active="request()->routeIs('admin.settings.point-rate.*')">

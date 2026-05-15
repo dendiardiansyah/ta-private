@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 border-b border-gray-200">
-                    <form action="{{ route('admin.katalog.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.jenis-sampah.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Nama Jenis Sampah</label>
@@ -35,7 +35,7 @@
                                 class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                         </div>
                         <div class="flex justify-end gap-2">
-                            <a href="{{ route('admin.katalog') }}"
+                            <a href="{{ route('admin.jenis-sampah.index') }}"
                                 class="bg-gray-500 text-white px-4 py-2 rounded shadow-sm hover:bg-gray-600">Batal</a>
                             <button type="submit"
                                 class="bg-green-600 text-white px-4 py-2 rounded shadow-sm hover:bg-green-700">Simpan</button>

@@ -36,7 +36,6 @@
     <div class="py-6 sm:py-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="space-y-6">
-                <!-- Greeting / quick context -->
                 <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div>
@@ -290,8 +289,9 @@
                                     harian)
                                 </p>
                             </div>
-                            <a href="{{ route('admin.katalog') }}"
-                                class="text-sm font-semibold text-indigo-700 hover:text-indigo-800">Katalog</a>
+                            <a href="{{ route('admin.jenis-sampah.index') }}"
+                                class="text-sm font-semibold text-indigo-700 hover:text-indigo-800">Kelola Jenis
+                                Sampah</a>
                         </div>
 
                         <div class="mt-4 space-y-3">
@@ -338,7 +338,8 @@
                                     class="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 p-3">
                                     <div class="min-w-0">
                                         <p class="truncate text-sm font-semibold text-gray-900">
-                                            {{ $row->user->name ?? '-' }}</p>
+                                            {{ $row->user->name ?? '-' }}
+                                        </p>
                                         <p class="text-xs text-gray-500">{{ $row->transaksi_count }} transaksi ·
                                             {{ number_format((int) $row->total_kg) }} kg
                                         </p>
@@ -366,7 +367,8 @@
                                     class="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 p-3">
                                     <div class="min-w-0">
                                         <p class="truncate text-sm font-semibold text-gray-900">
-                                            {{ $row->petugas->name ?? '-' }}</p>
+                                            {{ $row->petugas->name ?? '-' }}
+                                        </p>
                                         <p class="text-xs text-gray-500">{{ $row->transaksi_count }} tugas ·
                                             {{ number_format((int) $row->total_kg) }} kg
                                         </p>

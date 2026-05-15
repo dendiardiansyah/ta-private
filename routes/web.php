@@ -16,9 +16,10 @@ use App\Http\Controllers\ProductPurchaseController;
 
 Route::get('/', function () {
     return view('common.welcome');
-});
+})->name('welcome');
 
-Route::middleware('guest')->group(function () {
+// Login and Register routes - accessible to guests and redirect authenticated users to dashboard
+Route::middleware(['guest', 'redirect.if.authenticated'])->group(function () {
     Route::get('/login', function () {
         $query = request()->query();
         $query['auth'] = 'login';
@@ -64,12 +65,13 @@ Route::prefix('admin')->name('admin.')->middleware([
     Route::get('/settings/point-rate', [PointRateController::class, 'edit'])->name('settings.point-rate.edit');
     Route::put('/settings/point-rate', [PointRateController::class, 'update'])->name('settings.point-rate.update');
 
-    Route::get('/katalog', [AdminKatalogController::class, 'index'])->name('katalog');
-    Route::get('/katalog/create', [AdminKatalogController::class, 'create'])->name('katalog.create');
-    Route::post('/katalog/store', [AdminKatalogController::class, 'store'])->name('katalog.store');
-    Route::get('/katalog/edit/{jenis_sampah_id}', [AdminKatalogController::class, 'edit'])->name('katalog.edit');
-    Route::put('/katalog/edit/{jenis_sampah_id}', [AdminKatalogController::class, 'update'])->name('katalog.update');
-    Route::delete('/katalog/delete/{jenis_sampah_id}', [AdminKatalogController::class, 'destroy'])->name('katalog.delete');
+    // Jenis Sampah (Waste Type) CRUD - replaces Katalog Produk
+    Route::get('/jenis-sampah', [\App\Http\Controllers\Admin\AdminJenisSampahController::class, 'index'])->name('jenis-sampah.index');
+    Route::get('/jenis-sampah/create', [\App\Http\Controllers\Admin\AdminJenisSampahController::class, 'create'])->name('jenis-sampah.create');
+    Route::post('/jenis-sampah', [\App\Http\Controllers\Admin\AdminJenisSampahController::class, 'store'])->name('jenis-sampah.store');
+    Route::get('/jenis-sampah/{jenis_sampah}/edit', [\App\Http\Controllers\Admin\AdminJenisSampahController::class, 'edit'])->name('jenis-sampah.edit');
+    Route::put('/jenis-sampah/{jenis_sampah}', [\App\Http\Controllers\Admin\AdminJenisSampahController::class, 'update'])->name('jenis-sampah.update');
+    Route::delete('/jenis-sampah/{jenis_sampah}', [\App\Http\Controllers\Admin\AdminJenisSampahController::class, 'destroy'])->name('jenis-sampah.destroy');
 
     // Admin User Approval
     Route::get('/approvals', [\App\Http\Controllers\Admin\AdminUserApprovalController::class, 'index'])->name('approvals.index');

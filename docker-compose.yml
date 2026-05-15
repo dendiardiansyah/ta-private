@@ -21,20 +21,13 @@ services:
         condition: service_healthy
     networks:
       - laravel
-
-  web:
-    image: nginx:1.27-alpine
-    container_name: ta_private_web
-    restart: unless-stopped
     ports:
-      - "8000:80"
-    volumes:
-      - ./:/var/www/html:delegated
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - app
-    networks:
-      - laravel
+      - "8000:8000"
+    command: sh -lc "php artisan serve --host=0.0.0.0 --port=8000"
+
+  # Note: Nginx `web` service removed so `app` runs the built-in PHP server
+  # If you prefer Nginx in front of PHP-FPM, restore the `web` service and
+  # adjust ports accordingly.
 
   db:
     image: mysql:8.0

@@ -13,7 +13,7 @@
                 </div>
             @endif
             <div class="flex justify-end">
-                <a href="{{ route('admin.katalog.create') }}"
+                <a href="{{ route('admin.jenis-sampah.create') }}"
                     class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                     + Tambah Jenis Sampah
                 </a>
@@ -43,10 +43,10 @@
                                             {{ $jenisSampah->gambar ? $jenisSampah->gambar : 'No Image' }}
                                         </td>
                                         <td class="px-6 py-4 flex space-x-2">
-                                            <a href="{{ route('admin.katalog.edit', $jenisSampah->jenis_sampah_id) }}"
+                                            <a href="{{ route('admin.jenis-sampah.edit', $jenisSampah->jenis_sampah_id) }}"
                                                 class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded">Edit</a>
                                             <form
-                                                action="{{ route('admin.katalog.delete', $jenisSampah->jenis_sampah_id) }}"
+                                                action="{{ route('admin.jenis-sampah.destroy', $jenisSampah->jenis_sampah_id) }}"
                                                 method="POST" onsubmit="return confirm('Yakin hapus?');">
                                                 @csrf
                                                 @method('DELETE')
