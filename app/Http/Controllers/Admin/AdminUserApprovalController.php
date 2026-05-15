@@ -28,6 +28,7 @@ class AdminUserApprovalController extends Controller
 
         $user->update(['status' => 'approved']);
 
+        $user->load('roles');
         Mail::to($user->email)->send(new UserRegistrationApproved($user));
 
         return redirect()->route('admin.approvals.index')->with('success', 'User berhasil disetujui. Email notifikasi telah dikirim.');

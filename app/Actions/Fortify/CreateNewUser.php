@@ -5,6 +5,7 @@ namespace App\Actions\Fortify;
 use App\Models\User;
 use App\Models\Role;
 use App\Mail\AdminRegistrationNotification;
+use App\Mail\UserRegistrationPending;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -54,16 +55,18 @@ class CreateNewUser implements CreatesNewUsers
 
         $roleModel = Role::query()->firstOrCreate(['name' => $roleSlug]);
         $user->roles()->attach($roleModel->id);
+        $user->load('roles');
 
         if ($status === 'pending') {
-            // Kirim email ke semua admin
-            $admins = User::whereHas('roles', function ($q) {
+            $admin = User::whereHas('roles', function ($q) {
                 $q->where('name', 'admin');
-            })->where('status', 'approved')->get();
+            })->where('status', 'approved')->inRandomOrder()->first();
 
-            foreach ($admins as $admin) {
+            if ($admin) {
                 Mail::to($admin->email)->send(new AdminRegistrationNotification($user));
             }
+
+            Mail::to($user->email)->send(new UserRegistrationPending($user));
         }
 
         return $user;

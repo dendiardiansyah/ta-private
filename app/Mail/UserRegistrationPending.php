@@ -4,18 +4,17 @@ namespace App\Mail;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 // Note: Intentionally synchronous. Add `implements ShouldQueue` to queue this when a queue worker is available in production.
-class AdminRegistrationNotification extends Mailable
+class UserRegistrationPending extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
+    public User $user;
 
     /**
      * Create a new message instance.
@@ -31,7 +30,7 @@ class AdminRegistrationNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Notifikasi Registrasi Pengguna Baru',
+            subject: 'Registrasi Sedang Diproses',
         );
     }
 
@@ -41,7 +40,7 @@ class AdminRegistrationNotification extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.admin.registration_notification',
+            markdown: 'emails.user.registration_pending',
         );
     }
 

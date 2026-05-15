@@ -10,6 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
+// Note: Intentionally synchronous. Add `implements ShouldQueue` to queue this when a queue worker is available in production.
 class UserRegistrationApproved extends Mailable
 {
     use Queueable, SerializesModels;
