@@ -17,10 +17,18 @@ class LoginResponse implements LoginResponseContract
     {
         $user = $request->user();
 
-        if ($user && method_exists($user, 'hasRole') && $user->hasRole('admin') && Route::has('admin.dashboard')) {
-            return redirect()->intended(route('admin.dashboard'));
+        if ($user && method_exists($user, 'hasRole')) {
+            if ($user->hasRole('admin')) {
+                return redirect()->route('admin.dashboard');
+            }
+            if ($user->hasRole('petugas')) {
+                return redirect()->route('petugas.index');
+            }
+            if ($user->hasRole('pelaku_usaha')) {
+                return redirect()->route('pelaku_usaha.dashboard');
+            }
         }
 
-        return redirect()->intended(route('dashboard'));
+        return redirect()->route('dashboard');
     }
 }
