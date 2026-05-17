@@ -1,19 +1,23 @@
 <x-mail::message>
-    # Pendaftaran Pengguna Baru
+# Pendaftaran Pengguna Baru
 
-    Terdapat pengguna baru yang mendaftar dan membutuhkan persetujuan Anda:
+Terdapat pengguna baru yang mendaftar dan membutuhkan persetujuan Anda:
 
-    **Nama:** {{ $user->name }}
-    **Email:** {{ $user->email }}
-    **Role:** {{ $user->roles->first()->name ?? 'Tidak ada' }}
+**Nama:** {{ $user->name }}  
+<br>
+**Email:** {{ $user->email }}  
+<br>
+**Role:** {{ $user->roles->first()->name ?? 'Tidak ada' }}
+<br>
 
-    Silakan klik tombol di bawah ini untuk menyetujui pengguna ini secara langsung atau kunjungi halaman Penerimaan
-    Registrasi di Dashboard Admin.
+Silakan klik tombol di bawah ini untuk menyetujui pengguna ini secara langsung atau kunjungi halaman Penerimaan
+Registrasi di Dashboard Admin.
 
-    <x-mail::button :url="route('admin.approvals.approve.link', ['user' => $user->id])">
-        Setujui Pengguna
-    </x-mail::button>
+<x-mail::button :url="route('admin.approvals.approve.link', ['user' => $user->id])">
+Setujui Pengguna
+</x-mail::button>
 
-    Terima kasih,<br>
-    {{ config('app.name') }}
+Terima kasih,
+<br/>
+{{ config('app.name') }}
 </x-mail::message>

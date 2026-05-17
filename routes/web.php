@@ -77,12 +77,18 @@ Route::prefix('admin')->name('admin.')->middleware([
     Route::get('/approvals', [\App\Http\Controllers\Admin\AdminUserApprovalController::class, 'index'])->name('approvals.index');
     Route::get('/approvals/{user}/approve', [\App\Http\Controllers\Admin\AdminUserApprovalController::class, 'approve'])->name('approvals.approve.link');
     Route::post('/approvals/{user}', [\App\Http\Controllers\Admin\AdminUserApprovalController::class, 'approve'])->name('approvals.approve');
+    Route::post('/approvals/{user}/reject', [\App\Http\Controllers\Admin\AdminUserApprovalController::class, 'reject'])->name('approvals.reject');
 
     // Admin Users Management
     Route::get('/users', [\App\Http\Controllers\Admin\AdminUserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}/edit', [\App\Http\Controllers\Admin\AdminUserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [\App\Http\Controllers\Admin\AdminUserController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [\App\Http\Controllers\Admin\AdminUserController::class, 'destroy'])->name('users.destroy');
+
+    // Admin Penarikan Poin
+    Route::get('/penarikan-poin', [\App\Http\Controllers\Admin\AdminPenarikanPoinController::class, 'index'])->name('penarikan-poin.index');
+    Route::post('/penarikan-poin/{id}/approve', [\App\Http\Controllers\Admin\AdminPenarikanPoinController::class, 'approve'])->name('penarikan-poin.approve');
+    Route::post('/penarikan-poin/{id}/reject', [\App\Http\Controllers\Admin\AdminPenarikanPoinController::class, 'reject'])->name('penarikan-poin.reject');
 });
 
 // Pelaku Usaha routes

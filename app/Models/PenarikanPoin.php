@@ -11,6 +11,8 @@ class PenarikanPoin extends Model
 
     protected $table = 'penarikan_poin';
 
+    protected $primaryKey = 'penarikan_poin_id';
+
     protected $fillable = [
         'nasabah_id',
         'jumlah_poin',

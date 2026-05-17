@@ -29,11 +29,16 @@
                                     <td class="px-6 py-4">{{ $user->name }}</td>
                                     <td class="px-6 py-4">{{ $user->email }}</td>
                                     <td class="px-6 py-4">{{ $user->roles->first()->name ?? '-' }}</td>
-                                    <td class="px-6 py-4">
+                                    <td class="px-6 py-4 flex space-x-2">
                                         <form action="{{ route('admin.approvals.approve', $user->id) }}" method="POST">
                                             @csrf
                                             <button type="submit"
-                                                class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Approve</button>
+                                                class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm">Approve</button>
+                                        </form>
+                                        <form action="{{ route('admin.approvals.reject', $user->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit"
+                                                class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm">Reject</button>
                                         </form>
                                     </td>
                                 </tr>

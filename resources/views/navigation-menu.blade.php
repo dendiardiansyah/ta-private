@@ -43,6 +43,10 @@
                             :active="request()->routeIs('admin.jenis-sampah.*')">
                             {{ __('Jenis Sampah') }}
                         </x-common.nav-link>
+                        <x-common.nav-link href="{{ route('admin.penarikan-poin.index') }}"
+                            :active="request()->routeIs('admin.penarikan-poin.*')">
+                            {{ __('Penarikan Poin') }}
+                        </x-common.nav-link>
                     </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-common.nav-link href="{{ route('admin.approvals.index') }}"
@@ -251,6 +255,10 @@
                 <x-common.responsive-nav-link href="{{ route('admin.jenis-sampah.index') }}"
                     :active="request()->routeIs('admin.jenis-sampah.*')">
                     {{ __('Jenis Sampah') }}
+                </x-common.responsive-nav-link>
+                <x-common.responsive-nav-link href="{{ route('admin.penarikan-poin.index') }}"
+                    :active="request()->routeIs('admin.penarikan-poin.*')">
+                    {{ __('Penarikan Poin') }}
                 </x-common.responsive-nav-link>
                 <x-common.responsive-nav-link href="{{ route('admin.approvals.index') }}"
                     :active="request()->routeIs('admin.approvals.*')">

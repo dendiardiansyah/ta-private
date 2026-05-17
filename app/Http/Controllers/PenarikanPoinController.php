@@ -52,7 +52,7 @@ class PenarikanPoinController extends Controller
     // Fungsi untuk menghitung nilai uang berdasarkan jumlah poin
     private function hitungNilaiUang($jumlahPoin)
     {
-        $nilaiPerPoin = 100;  // Asumsi nilai per poin (misalnya, 1 poin = 100 uang)
+        $nilaiPerPoin = \App\Models\Setting::pointRateRupiahPerPoint();
         return $jumlahPoin * $nilaiPerPoin;  // Mengembalikan hasil perhitungan
     }
 }

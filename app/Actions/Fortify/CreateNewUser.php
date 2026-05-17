@@ -23,6 +23,16 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
+        // Jika email sudah pernah mendaftar dan ditolak, hapus data lama agar bisa mendaftar lagi
+        $existingRejectedUser = User::where('email', $input['email'])
+            ->where('status', 'rejected')
+            ->first();
+
+        if ($existingRejectedUser) {
+            $existingRejectedUser->roles()->detach();
+            $existingRejectedUser->delete();
+        }
+
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
