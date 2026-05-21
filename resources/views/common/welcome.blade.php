@@ -64,10 +64,12 @@
         </div>
     </main>
 
-    <div id="authModal"
-        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300 items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform scale-95 transition-transform duration-300 relative"
-            id="modalContent">
+    <div id="authModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 opacity-0 pointer-events-none
+    transition-opacity duration-300 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md
+        max-h-[95vh] overflow-y-auto
+        transform scale-95 transition-transform duration-300 relative" id="modalContent">
 
             <button onclick="closeModal()"
                 class="absolute top-5 right-5 text-gray-400 hover:text-gray-700 transition-colors bg-gray-100 hover:bg-gray-200 p-2 rounded-full z-10">
@@ -77,7 +79,7 @@
                 </svg>
             </button>
 
-            <div class="p-8 pt-10">
+            <div class="p-5 sm:p-8 pt-8 sm:pt-10">
                 <div class="text-center mb-8">
                     <h3 class="text-2xl font-extrabold text-gray-900 mb-2">Selamat Datang</h3>
                     <p class="text-sm text-gray-500">Silakan masuk atau buat akun baru.</p>
@@ -183,23 +185,18 @@
         const tabLogin = document.getElementById('tab-login');
         const tabRegister = document.getElementById('tab-register');
 
-        function openModal(type) {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                modalContent.classList.remove('scale-95');
-            }, 10);
-            switchTab(type);
+        function openModal() {
+            const modal = document.getElementById('authModal');
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100');
         }
 
         function closeModal() {
-            modal.classList.add('opacity-0');
-            modalContent.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.remove('flex');
-                modal.classList.add('hidden');
-            }, 300);
+            const modal = document.getElementById('authModal');
+
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.classList.remove('opacity-100');
         }
 
         function switchTab(type) {
