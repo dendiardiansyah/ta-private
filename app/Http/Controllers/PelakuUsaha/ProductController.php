@@ -10,6 +10,15 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    public function image(Product $product)
+    {
+        if (empty($product->image_path) || !Storage::disk('public')->exists($product->image_path)) {
+            abort(404);
+        }
+
+        return Storage::disk('public')->response($product->image_path);
+    }
+
     public function index()
     {
         $products = Product::query()

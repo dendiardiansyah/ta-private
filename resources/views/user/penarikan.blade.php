@@ -119,7 +119,6 @@
                         <table class="table align-middle mb-0">
                             <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th>Tanggal</th>
                                     <th>Poin</th>
                                     <th>Nominal</th>
@@ -129,7 +128,6 @@
                             <tbody>
                                 @forelse ($penarikanPoin as $index => $penarikan)
                                     <tr>
-                                        <td>{{ $index + 1 }}</td>
                                         <td>{{ optional($penarikan->created_at)->format('d-m-Y H:i') }}</td>
                                         <td class="fw-bold text-success">
                                             {{ number_format($penarikan->jumlah_poin, 0, ',', '.') }}</td>
@@ -148,7 +146,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center text-muted py-4">Belum ada riwayat penarikan
+                                        <td colspan="4" class="text-center text-muted py-4">Belum ada riwayat penarikan
                                             poin.</td>
                                     </tr>
                                 @endforelse

@@ -35,7 +35,11 @@ class AdminDashboardController extends Controller
             ->count();
 
         $totalTransaksi = Transaksi::query()->count();
-        $totalKg = (int) Transaksi::query()->sum('jumlah');
+        $transactionWeightSub = DB::table('transaksi_detail')
+            ->select('transaksi_id', DB::raw('SUM(berat) as total_berat'))
+            ->groupBy('transaksi_id');
+
+        $totalKg = (float) DB::table('transaksi_detail')->sum('berat');
         $activeNasabahCount = (int) Transaksi::query()->distinct('nasabah_id')->count('nasabah_id');
         $activePetugasCount = (int) Transaksi::query()->whereNotNull('petugas_id')->distinct('petugas_id')->count('petugas_id');
 
@@ -46,14 +50,21 @@ class AdminDashboardController extends Controller
             ->pluck('total', 'status');
 
         $latestTransaksi = Transaksi::query()
-            ->with(['user', 'petugas', 'jenisSampah'])
+            ->with(['user', 'petugas', 'details.jenisSampah'])
             ->orderByDesc('tanggal_transaksi')
             ->orderByDesc('transaksi_id')
             ->limit(8)
             ->get();
 
         $topNasabah = Transaksi::query()
-            ->select('nasabah_id', DB::raw('COUNT(*) as transaksi_count'), DB::raw('SUM(jumlah) as total_kg'))
+            ->leftJoinSub($transactionWeightSub, 'td_total', function ($join) {
+                $join->on('transaksi.transaksi_id', '=', 'td_total.transaksi_id');
+            })
+            ->select(
+                'nasabah_id',
+                DB::raw('COUNT(*) as transaksi_count'),
+                DB::raw('COALESCE(SUM(td_total.total_berat), 0) as total_kg')
+            )
             ->groupBy('nasabah_id')
             ->orderByDesc('transaksi_count')
             ->orderByDesc('total_kg')
@@ -63,7 +74,14 @@ class AdminDashboardController extends Controller
 
         $topPetugas = Transaksi::query()
             ->whereNotNull('petugas_id')
-            ->select('petugas_id', DB::raw('COUNT(*) as transaksi_count'), DB::raw('SUM(jumlah) as total_kg'))
+            ->leftJoinSub($transactionWeightSub, 'td_total', function ($join) {
+                $join->on('transaksi.transaksi_id', '=', 'td_total.transaksi_id');
+            })
+            ->select(
+                'petugas_id',
+                DB::raw('COUNT(*) as transaksi_count'),
+                DB::raw('COALESCE(SUM(td_total.total_berat), 0) as total_kg')
+            )
             ->groupBy('petugas_id')
             ->orderByDesc('transaksi_count')
             ->orderByDesc('total_kg')
@@ -86,12 +104,27 @@ class AdminDashboardController extends Controller
                 ];
             });
 
+        // Total per jenis sampah (hanya transaksi Selesai)
+        $totalPerJenisSampah = DB::table('transaksi_detail')
+            ->join('transaksi', 'transaksi_detail.transaksi_id', '=', 'transaksi.transaksi_id')
+            ->join('jenis_sampah', 'transaksi_detail.jenis_sampah_id', '=', 'jenis_sampah.jenis_sampah_id')
+            ->where('transaksi.status', 'Selesai')
+            ->select(
+                'jenis_sampah.nama_jenis',
+                DB::raw('SUM(transaksi_detail.berat) as total_kg'),
+                DB::raw('COUNT(DISTINCT transaksi_detail.transaksi_id) as transaksi_count')
+            )
+            ->groupBy('jenis_sampah.jenis_sampah_id', 'jenis_sampah.nama_jenis')
+            ->orderByDesc('total_kg')
+            ->get();
+
         // Chart: transaksi per day (last 14 days)
         $end = Carbon::today();
         $start = (clone $end)->subDays(13);
         $rows = Transaksi::query()
+            ->leftJoin('transaksi_detail', 'transaksi.transaksi_id', '=', 'transaksi_detail.transaksi_id')
             ->whereBetween('tanggal_transaksi', [$start->toDateString(), $end->toDateString()])
-            ->selectRaw('tanggal_transaksi as day, COUNT(*) as total, SUM(jumlah) as total_kg')
+            ->selectRaw('tanggal_transaksi as day, COUNT(DISTINCT transaksi.transaksi_id) as total, COALESCE(SUM(transaksi_detail.berat), 0) as total_kg')
             ->groupBy('day')
             ->orderBy('day')
             ->get();
@@ -138,6 +171,7 @@ class AdminDashboardController extends Controller
             'topNasabah' => $topNasabah,
             'topPetugas' => $topPetugas,
             'latestHarga' => $latestHarga,
+            'totalPerJenisSampah' => $totalPerJenisSampah,
             'transaksiChartLabels' => $transaksiChartLabels,
             'transaksiChartCounts' => $transaksiChartCounts,
             'transaksiChartKg' => $transaksiChartKg,

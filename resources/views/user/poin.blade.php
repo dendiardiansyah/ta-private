@@ -76,9 +76,8 @@
                         <table class="table align-middle mb-0">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>Jenis Sampah</th>
                                     <th>Tanggal</th>
+                                    <th>Jenis Sampah</th>
                                     <th>Status</th>
                                     <th>Jumlah Poin</th>
                                 </tr>
@@ -86,9 +85,8 @@
                             <tbody>
                                 @forelse ($poinRecords as $index => $poin)
                                     <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $poin->transaksi->jenisSampah->nama_jenis ?? 'N/A' }}</td>
                                         <td>{{ \Carbon\Carbon::parse($poin->tanggal_diberikan)->format('d-m-Y') }}</td>
+                                        <td>{{ $poin->transaksi->jenisSampah->nama_jenis ?? 'N/A' }}</td>
                                         <td>
                                             @php
                                                 $status = $poin->transaksi->status ?? 'tidak diketahui';
@@ -107,7 +105,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center text-muted py-4">Belum ada riwayat poin.</td>
+                                        <td colspan="4" class="text-center text-muted py-4">Belum ada riwayat poin.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

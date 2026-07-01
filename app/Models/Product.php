@@ -36,4 +36,27 @@ class Product extends Model
     {
         return $this->hasMany(ProductOrder::class);
     }
+
+    public function getImageUrlAttribute(): string
+    {
+        if (empty($this->image_path)) {
+            return asset('image/default.png');
+        }
+
+        if (str_starts_with($this->image_path, 'http://') || str_starts_with($this->image_path, 'https://')) {
+            return $this->image_path;
+        }
+
+        $path = ltrim($this->image_path, '/');
+
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, strlen('storage/'));
+        }
+
+        if (str_starts_with($path, 'public/')) {
+            $path = substr($path, strlen('public/'));
+        }
+
+        return route('products.image', ['product' => $this->getKey()]);
+    }
 }

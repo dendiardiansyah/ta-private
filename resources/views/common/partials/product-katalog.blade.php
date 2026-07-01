@@ -30,7 +30,7 @@
         <div class="col-sm-6 col-lg-4">
             <div class="card soft-card h-100">
                 <div class="katalog-image-wrap">
-                    <img src="{{ $product->image_path ? asset('storage/' . $product->image_path) : asset('image/default.png') }}"
+                    <img src="{{ $product->image_url }}"
                         class="katalog-image" alt="{{ $product->name }}"
                         onerror="this.onerror=null;this.src='{{ asset('image/default.png') }}'">
                 </div>

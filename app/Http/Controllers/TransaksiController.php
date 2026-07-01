@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\JenisSampah;
-use App\Models\Transaksi;  // Model untuk transaksi
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,24 +11,24 @@ class TransaksiController extends Controller
     // Menampilkan form untuk membuat transaksi baru
     public function create()
     {
-        // Mengambil data jenis sampah
-        $jenisSampah = JenisSampah::all();
+        // Cek apakah user sudah punya alamat
+        $user = Auth::user();
+        
+        if (empty($user->alamat)) {
+            return redirect()->route('profile.show')
+                ->with('error', 'Mohon lengkapi alamat Anda terlebih dahulu sebelum mengajukan penjemputan.');
+        }
 
-
-        // dd($jenisSampah);
-
-        // Mengirim data jenis sampah ke view
-        return view('user.penjemputan', compact('jenisSampah'));
+        // Nasabah hanya perlu input tanggal, alamat auto-filled
+        // Jenis sampah dan berat akan diinput oleh Petugas
+        return view('user.penjemputan');
     }
 
     // Menyimpan transaksi baru ke database
     public function store(Request $request)
     {
-        // Validasi data dari form
+        // Validasi data dari form - hanya tanggal_transaksi
         $request->validate([
-            'jenis_sampah_id' => 'required|exists:jenis_sampah,jenis_sampah_id', // Validasi jenis_sampah_id dengan primary key
-            'alamat_penjemputan' => 'required|string',
-            'jumlah' => 'required|numeric|min:1',
             'tanggal_transaksi' => 'required|date',
         ]);
 
@@ -42,31 +41,32 @@ class TransaksiController extends Controller
                     }
                 ])->orderBy('active_tasks_count', 'asc')->first();
 
-        // Membuat transaksi baru
+        // Gunakan alamat dari profil user
+        $alamatPenjemputan = Auth::user()->alamat;
+
+        // Membuat transaksi baru (tanpa jenis sampah dan berat - akan diinput oleh petugas)
         Transaksi::create([
             'nasabah_id' => Auth::id(),
-            'jenis_sampah_id' => $request->jenis_sampah_id, // Menyimpan jenis sampah yang dipilih
             'petugas_id' => $petugas ? $petugas->id : null,
-            'alamat_penjemputan' => $request->alamat_penjemputan,
-            'jumlah' => $request->jumlah,
+            'alamat_penjemputan' => $alamatPenjemputan,
             'tanggal_transaksi' => $request->tanggal_transaksi,
             'status' => 'Menunggu Petugas'
         ]);
 
         // Redirect setelah berhasil menyimpan transaksi
-        session()->flash('message', 'Transaksi berhasil dibuat!');
+        session()->flash('message', 'Permintaan penjemputan berhasil dibuat!');
 
         // Redirect setelah berhasil menyimpan transaksi
         return redirect()->route('penjemputan.create');
     }
 
     // Menampilkan riwayat transaksi penjemputan
-    // Controller TransaksiController
     public function history()
     {
-        // Ambil data transaksi beserta poin yang terkait
+        // Ambil data transaksi beserta detail dan poin yang terkait
         $transaksis = Transaksi::where('nasabah_id', Auth::id())
-            ->with('user', 'poin') // Menambahkan relasi poin
+            ->with(['user', 'poin', 'details.jenisSampah'])
+            ->orderBy('tanggal_transaksi', 'desc')
             ->get();
 
         // Kirim data transaksi dan poin ke view
@@ -88,20 +88,14 @@ class TransaksiController extends Controller
             return redirect()->route('penjemputan.history')->with('error', 'Transaksi sedang/sudah diproses, tidak bisa diubah!');
         }
 
-        // Ambil semua data jenis sampah
-        $jenisSampah = JenisSampah::all();
-
-        // Tampilkan tampilan form edit dengan data transaksi dan jenis sampah
-        return view('user.edit_penjemputan', compact('transaksi', 'jenisSampah'));
+        // Nasabah hanya bisa edit tanggal, alamat auto-filled
+        return view('user.edit_penjemputan', compact('transaksi'));
     }
 
     public function update(Request $request, $transaksi_id)
     {
-        // Validasi inputan form
+        // Validasi inputan form - hanya tanggal_transaksi
         $request->validate([
-            'jenis_sampah_id' => 'required|exists:jenis_sampah,jenis_sampah_id',
-            'alamat_penjemputan' => 'required|string',
-            'jumlah' => 'required|numeric|min:1',
             'tanggal_transaksi' => 'required|date',
         ]);
 
@@ -114,11 +108,12 @@ class TransaksiController extends Controller
             return redirect()->route('penjemputan.history')->with('error', 'Transaksi sedang/sudah diproses, tidak bisa diubah!');
         }
 
+        // Gunakan alamat dari profil user
+        $alamatPenjemputan = Auth::user()->alamat;
+
         // Update data transaksi
         $transaksi->update([
-            'jenis_sampah_id' => $request->jenis_sampah_id,
-            'alamat_penjemputan' => $request->alamat_penjemputan,
-            'jumlah' => $request->jumlah,
+            'alamat_penjemputan' => $alamatPenjemputan,
             'tanggal_transaksi' => $request->tanggal_transaksi,
         ]);
 

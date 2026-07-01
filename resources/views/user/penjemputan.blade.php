@@ -35,8 +35,8 @@
                     <div class="card hero-card h-100">
                         <div class="card-body p-4 p-md-5 d-flex flex-column justify-content-center">
                             <p class="mb-2 opacity-75">Form Penjemputan</p>
-                            <h2 class="fw-bold mb-2">Ajukan Transaksi Sampah</h2>
-                            <p class="mb-0 opacity-75">Isi data penjemputan dengan benar agar proses lebih cepat.</p>
+                            <h2 class="fw-bold mb-2">Ajukan Permintaan Penjemputan</h2>
+                            <p class="mb-0 opacity-75">Tentukan tanggal penjemputan. Petugas akan mencatat jenis dan berat sampah saat pengambilan.</p>
                         </div>
                     </div>
                 </div>
@@ -50,49 +50,31 @@
                                 @csrf
 
                                 <div>
-                                    <label for="jenis_sampah_id" class="form-label fw-semibold">Jenis Sampah</label>
-                                    <select name="jenis_sampah_id" id="jenis_sampah_id" class="form-select" required>
-                                        <option value="">Pilih Jenis Sampah</option>
-                                        @foreach ($jenisSampah as $jenis)
-                                            <option value="{{ $jenis->jenis_sampah_id }}"
-                                                @selected(old('jenis_sampah_id') == $jenis->jenis_sampah_id)>
-                                                {{ $jenis->nama_jenis }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('jenis_sampah_id')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
+                                    <label for="alamat_penjemputan" class="form-label fw-semibold">Alamat
+                                        Penjemputan</label>
+                                    <textarea name="alamat_penjemputan" id="alamat_penjemputan" rows="3"
+                                        class="form-control bg-light" disabled readonly>{{ Auth::user()->alamat }}</textarea>
+                                    <small class="text-muted">Alamat diambil dari profil Anda. Ubah di halaman profil jika perlu.</small>
                                 </div>
 
                                 <div>
-                                    <label for="alamat_penjemputan" class="form-label fw-semibold">Alamat
+                                    <label for="tanggal_transaksi" class="form-label fw-semibold">Tanggal
                                         Penjemputan</label>
-                                    <input type="text" name="alamat_penjemputan" id="alamat_penjemputan"
-                                        class="form-control" value="{{ old('alamat_penjemputan') }}" required>
-                                    @error('alamat_penjemputan')
+                                    <input type="date" name="tanggal_transaksi" id="tanggal_transaksi"
+                                        class="form-control" value="{{ old('tanggal_transaksi', date('Y-m-d')) }}" required>
+                                    @error('tanggal_transaksi')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
+                                    <small class="text-muted">Pilih tanggal yang Anda inginkan untuk penjemputan sampah.</small>
                                 </div>
 
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="jumlah" class="form-label fw-semibold">Jumlah (kg)</label>
-                                        <input type="number" name="jumlah" id="jumlah" class="form-control" min="1"
-                                            value="{{ old('jumlah') }}" required>
-                                        @error('jumlah')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label for="tanggal_transaksi" class="form-label fw-semibold">Tanggal
-                                            Transaksi</label>
-                                        <input type="date" name="tanggal_transaksi" id="tanggal_transaksi"
-                                            class="form-control" value="{{ old('tanggal_transaksi') }}" required>
-                                        @error('tanggal_transaksi')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
+                                <div class="alert alert-info mb-0">
+                                    <div class="d-flex align-items-start gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-info-circle flex-shrink-0 mt-1" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                        </svg>
+                                        <small><strong>Catatan:</strong> Jenis sampah dan beratnya akan dicatat oleh petugas saat pengambilan.</small>
                                     </div>
                                 </div>
 

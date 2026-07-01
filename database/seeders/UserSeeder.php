@@ -18,10 +18,10 @@ class UserSeeder extends Seeder
         $now = now();
 
         $roles = [
-            'user' => ['email' => 'nasabah@example.com', 'name' => 'Nasabah Demo'],
-            'admin' => ['email' => 'admin@example.com', 'name' => 'Admin Demo'],
-            'petugas' => ['email' => 'petugas@example.com', 'name' => 'Petugas Demo'],
-            'pelaku_usaha' => ['email' => 'pelaku_usaha@example.com', 'name' => 'Pelaku Usaha Demo'],
+            'user' => ['email' => 'nasabah@example.com', 'name' => 'Nasabah Demo', 'password' => 'nasabah123'],
+            'admin' => ['email' => 'admin@example.com', 'name' => 'Admin Demo', 'password' => 'admin123'],
+            'petugas' => ['email' => 'petugas@example.com', 'name' => 'Petugas Demo', 'password' => 'petugas123'],
+            'pelaku_usaha' => ['email' => 'pelakuusaha@example.com', 'name' => 'Pelaku Usaha Demo', 'password' => 'pelakuusaha123'],
         ];
 
         $userRoleId = null;
@@ -37,7 +37,9 @@ class UserSeeder extends Seeder
                 ['email' => $data['email']],
                 [
                     'name' => $data['name'],
-                    'password' => Hash::make('password'),
+                    'password' => Hash::make($data['password']),
+                    'alamat' => $faker->address,
+                    'nomor_telepon' => $faker->phoneNumber,
                     'total_poin' => 0,
                     'email_verified_at' => now(),
                 ]
@@ -55,6 +57,8 @@ class UserSeeder extends Seeder
                 [
                     'name' => $faker->name,
                     'password' => Hash::make('password'),
+                    'alamat' => $faker->address,
+                    'nomor_telepon' => $faker->phoneNumber,
                     'total_poin' => 0,
                     'email_verified_at' => now(),
                 ]

@@ -44,8 +44,8 @@
                                         <div class="flex items-center gap-3">
                                             <div
                                                 class="h-10 w-10 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center">
-                                                @if($product->image_path)
-                                                    <img src="{{ asset('storage/' . $product->image_path) }}"
+                                                @if($product->image_url)
+                                                    <img src="{{ $product->image_url }}"
                                                         class="h-full w-full object-cover" alt="{{ $product->name }}">
                                                 @else
                                                     <span class="text-xs text-gray-500">IMG</span>

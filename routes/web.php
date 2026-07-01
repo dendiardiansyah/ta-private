@@ -49,6 +49,7 @@ Route::middleware([
 });
 
 Route::get('/katalog', [KatalogController::class, 'index'])->name('katalog');
+Route::get('/products/{product}/image', [PelakuUsahaProductController::class, 'image'])->name('products.image');
 
 
 

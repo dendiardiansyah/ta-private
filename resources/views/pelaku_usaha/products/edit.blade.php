@@ -64,7 +64,7 @@
                         <label class="block text-sm font-semibold text-gray-700">Gambar (opsional)</label>
                         @if($product->image_path)
                             <div class="mt-2 flex items-center gap-3">
-                                <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}"
+                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}"
                                     class="h-16 w-16 rounded-xl object-cover border">
                                 <p class="text-xs text-gray-500">Upload file baru untuk mengganti gambar.</p>
                             </div>

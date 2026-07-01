@@ -143,6 +143,13 @@
                     </div>
 
                     <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider">Alamat Lengkap</label>
+                        <textarea name="alamat" rows="2"
+                            class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#0e6e36]/30 focus:border-[#0e6e36] transition-all outline-none text-gray-800 resize-none"
+                            required placeholder="Jl. Contoh No. 123, Kota"></textarea>
+                    </div>
+
+                    <div class="space-y-1.5">
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider">Role</label>
                         <select name="role"
                             class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#0e6e36]/30 focus:border-[#0e6e36] transition-all outline-none text-gray-800"
