@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
             'user' => ['email' => 'nasabah@example.com', 'name' => 'Nasabah Demo', 'password' => 'nasabah123'],
             'admin' => ['email' => 'admin@example.com', 'name' => 'Admin Demo', 'password' => 'admin123'],
             'petugas' => ['email' => 'petugas@example.com', 'name' => 'Petugas Demo', 'password' => 'petugas123'],
-            'pelaku_usaha' => ['email' => 'pelakuusaha@example.com', 'name' => 'Pelaku Usaha Demo', 'password' => 'pelakuusaha123'],
+            'pelaku_usaha' => ['email' => 'pelaku_usaha@example.com', 'name' => 'Pelaku Usaha Demo', 'password' => 'pelaku_usaha123'],
         ];
 
         $userRoleId = null;
