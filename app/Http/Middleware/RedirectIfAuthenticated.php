@@ -10,7 +10,7 @@ class RedirectIfAuthenticated
 {
     /**
      * Handle an incoming request.
-     * If user is authenticated and trying to access login/register, redirect to appropriate dashboard.
+     * If user is authenticated and trying to access login/register/landing, redirect to appropriate dashboard.
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -19,8 +19,8 @@ class RedirectIfAuthenticated
             return $next($request);
         }
 
-        // User is authenticated. If they're trying to access login or register, redirect them
-        if ($request->routeIs('login') || $request->routeIs('register')) {
+        // User is authenticated. If they're trying to access login, register, or landing page, redirect them
+        if ($request->routeIs('login') || $request->routeIs('register') || $request->routeIs('welcome')) {
             $user = $request->user();
 
             // Redirect to appropriate dashboard based on role

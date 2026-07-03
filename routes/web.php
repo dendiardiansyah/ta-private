@@ -16,10 +16,10 @@ use App\Http\Controllers\ProductPurchaseController;
 
 Route::get('/', function () {
     return view('common.welcome');
-})->name('welcome');
+})->middleware('guest')->name('welcome');
 
-// Login and Register routes - accessible to guests and redirect authenticated users to dashboard
-Route::middleware(['guest', 'redirect.if.authenticated'])->group(function () {
+// Login and Register routes - accessible to guests only
+Route::middleware(['guest'])->group(function () {
     Route::get('/login', function () {
         $query = request()->query();
         $query['auth'] = 'login';
