@@ -46,10 +46,9 @@ Route::middleware([
     Route::get('/poin', [PoinController::class, 'index'])->name('poin');
     Route::get('/penarikan-poin', [PenarikanPoinController::class, 'index'])->name('penarikan');
     Route::post('/penarikan-poin', [PenarikanPoinController::class, 'store'])->name('penarikan.store');
+    Route::get('/katalog', [KatalogController::class, 'index'])->name('katalog');
+    Route::get('/products/{product}/image', [PelakuUsahaProductController::class, 'image'])->name('products.image');
 });
-
-Route::get('/katalog', [KatalogController::class, 'index'])->name('katalog');
-Route::get('/products/{product}/image', [PelakuUsahaProductController::class, 'image'])->name('products.image');
 
 
 
@@ -171,6 +170,6 @@ Route::fallback(function () {
         return redirect()->route('dashboard');
     }
 
-    // Jika belum login, paksa ke halaman login
-    return redirect()->route('login');
+    // Jika belum login, paksa ke root/home page
+    return redirect()->route('welcome');
 });

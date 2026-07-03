@@ -18,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'ensure.authenticated' => \App\Http\Middleware\EnsureUserIsAuthenticated::class,
         ]);
 
-        $middleware->redirectGuestsTo('/login');
+        $middleware->redirectGuestsTo('/');
         $middleware->redirectUsersTo('/dashboard');
     })
     ->withExceptions(function (Exceptions $exceptions) {

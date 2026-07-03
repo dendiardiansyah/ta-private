@@ -31,7 +31,7 @@ class EnsureUserIsAuthenticated
         }
 
         // Unauthenticated user trying to access protected route
-        // Redirect to login
-        return redirect()->route('login');
+        // Redirect to root/home page
+        return redirect()->route('welcome');
     }
 }
