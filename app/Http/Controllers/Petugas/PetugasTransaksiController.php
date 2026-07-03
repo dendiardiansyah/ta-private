@@ -29,16 +29,29 @@ class PetugasTransaksiController extends Controller
 
     public function update(Request $request, $transaksi_id)
     {
+        // Filter details array to only include rows with non-empty jenis_sampah_id and berat
+        $detailsArray = [];
+        if ($request->has('details') && is_array($request->details)) {
+            foreach ($request->details as $detail) {
+                if (!empty($detail['jenis_sampah_id']) && !empty($detail['berat'])) {
+                    $detailsArray[] = $detail;
+                }
+            }
+        }
+
+        $request->merge(['details_filtered' => $detailsArray]);
+
         $request->validate([
             'status' => 'required|in:Menunggu Petugas,Menuju Lokasi,Sedang Diangkut,Selesai',
-            'details' => 'nullable|array',
-            'details.*.jenis_sampah_id' => 'required_with:details|exists:jenis_sampah,jenis_sampah_id',
-            'details.*.berat' => 'required_with:details|numeric|min:0.01|max:999999.99',
+            'details_filtered' => 'nullable|array',
+            'details_filtered.*.jenis_sampah_id' => 'required|exists:jenis_sampah,jenis_sampah_id',
+            'details_filtered.*.berat' => 'required|numeric|min:0.01|max:999999.99',
         ], [
-            'details.*.jenis_sampah_id.required_with' => 'Jenis sampah harus dipilih.',
-            'details.*.berat.required_with' => 'Berat harus diisi.',
-            'details.*.berat.min' => 'Berat minimal 0.01 kg.',
-            'details.*.berat.numeric' => 'Berat harus berupa angka.',
+            'details_filtered.*.jenis_sampah_id.required' => 'Jenis sampah harus dipilih untuk setiap item.',
+            'details_filtered.*.jenis_sampah_id.exists' => 'Jenis sampah yang dipilih tidak valid.',
+            'details_filtered.*.berat.required' => 'Berat harus diisi untuk setiap item.',
+            'details_filtered.*.berat.min' => 'Berat minimal 0.01 kg untuk setiap item.',
+            'details_filtered.*.berat.numeric' => 'Berat harus berupa angka untuk setiap item.',
         ]);
 
         $transaksi = Transaksi::with(['user', 'details'])->findOrFail($transaksi_id);
@@ -57,7 +70,7 @@ class PetugasTransaksiController extends Controller
         $statusBaru = $request->status;
 
         // Jika status diubah ke "Selesai", pastikan detail sudah diinput
-        if ($statusBaru === 'Selesai' && (!$request->has('details') || empty($request->details))) {
+        if ($statusBaru === 'Selesai' && empty($request->details_filtered)) {
             return redirect()->back()->with('error', 'Mohon input jenis sampah dan berat sebelum menyelesaikan transaksi.');
         }
 
@@ -67,19 +80,17 @@ class PetugasTransaksiController extends Controller
             $transaksi->save();
 
             // Jika ada detail yang diinput, simpan atau update
-            if ($request->has('details') && !empty($request->details)) {
+            if (!empty($request->details_filtered)) {
                 // Hapus detail lama jika ada
                 $transaksi->details()->delete();
 
-                // Simpan detail baru
-                foreach ($request->details as $detail) {
-                    if (isset($detail['jenis_sampah_id']) && isset($detail['berat']) && $detail['berat'] > 0) {
-                        TransaksiDetail::create([
-                            'transaksi_id' => $transaksi->transaksi_id,
-                            'jenis_sampah_id' => $detail['jenis_sampah_id'],
-                            'berat' => $detail['berat'],
-                        ]);
-                    }
+                // Simpan detail baru dari validated/filtered data
+                foreach ($request->details_filtered as $detail) {
+                    TransaksiDetail::create([
+                        'transaksi_id' => $transaksi->transaksi_id,
+                        'jenis_sampah_id' => $detail['jenis_sampah_id'],
+                        'berat' => $detail['berat'],
+                    ]);
                 }
 
                 // Reload details untuk perhitungan poin
