@@ -180,189 +180,6 @@
                                             @endif
                                         </td>
                                     </tr>
-
-                                    <!-- Modal Update -->
-                                    <div class="modal fade" id="updateModal{{ $transaksi->transaksi_id }}" tabindex="-1">
-                                        <div class="modal-dialog modal-lg">
-                                            <div class="modal-content">
-                                                <form action="{{ route('petugas.update', $transaksi->transaksi_id) }}" method="POST" id="updateForm{{ $transaksi->transaksi_id }}">
-                                                    @csrf
-                                                    @method('PUT')
-
-                                                    <div class="modal-header">
-                                                        <div>
-                                                            <h5 class="modal-title mb-1">Update Penjemputan</h5>
-                                                            <small class="text-muted">Transaksi #{{ $transaksi->transaksi_id }}</small>
-                                                        </div>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                    </div>
-
-                                                    <div class="modal-body">
-                                                        <div class="section-card mb-3">
-                                                            <div class="row g-3">
-                                                                <div class="col-md-6">
-                                                                    <div class="meta-label">Nasabah</div>
-                                                                    <div class="meta-value">{{ $transaksi->user->name }}</div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="meta-label">Tanggal</div>
-                                                                    <div class="meta-value">{{ \Carbon\Carbon::parse($transaksi->tanggal_transaksi)->format('d F Y') }}</div>
-                                                                </div>
-                                                                <div class="col-12">
-                                                                    <div class="meta-label">Alamat</div>
-                                                                    <div class="meta-value">{{ $transaksi->alamat_penjemputan }}</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="section-card mb-3">
-                                                            <div class="sampah-header mb-2">
-                                                                <div>
-                                                                    <h6 class="mb-1 fw-semibold">Status Penjemputan</h6>
-                                                                    <small class="text-muted">Perbarui progres penjemputan sesuai kondisi lapangan.</small>
-                                                                </div>
-                                                            </div>
-                                                            <select name="status" class="form-select mt-3" required>
-                                                                <option value="Menunggu Petugas" {{ $transaksi->status == 'Menunggu Petugas' ? 'selected' : '' }}>Menunggu Petugas</option>
-                                                                <option value="Menuju Lokasi" {{ $transaksi->status == 'Menuju Lokasi' ? 'selected' : '' }}>Menuju Lokasi</option>
-                                                                <option value="Sedang Diangkut" {{ $transaksi->status == 'Sedang Diangkut' ? 'selected' : '' }}>Sedang Diangkut</option>
-                                                                <option value="Selesai" {{ $transaksi->status == 'Selesai' ? 'selected' : '' }}>Selesai</option>
-                                                            </select>
-                                                        </div>
-
-                                                        <div class="section-card">
-                                                            <div class="sampah-header mb-2">
-                                                                <div>
-                                                                    <h6 class="mb-1 fw-semibold">Jenis Sampah & Berat</h6>
-                                                                    <small class="text-muted">Tambahkan satu atau lebih item sampah yang berhasil diambil.</small>
-                                                                </div>
-                                                                <button type="button" class="btn btn-sm btn-success d-inline-flex align-items-center gap-1" onclick="addSampahRow{{ $transaksi->transaksi_id }}()">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                                                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                                                    </svg>
-                                                                    Tambah Item
-                                                                </button>
-                                                            </div>
-                                                            <small class="text-muted d-block mb-3">Berat dapat berupa desimal, misalnya 0.50 kg atau 1.25 kg.</small>
-
-                                                            <div id="sampahContainer{{ $transaksi->transaksi_id }}">
-                                                                @if($transaksi->details->isNotEmpty())
-                                                                    @foreach($transaksi->details as $index => $detail)
-                                                                        <div class="sampah-item-row">
-                                                                            <div class="row g-3 align-items-end">
-                                                                                <div class="col-md-7">
-                                                                                    <label class="form-label mb-1 small text-muted">Jenis Sampah</label>
-                                                                                    <select name="details[{{ $index }}][jenis_sampah_id]" class="form-select">
-                                                                                        <option value="">Pilih Jenis Sampah</option>
-                                                                                        @foreach($jenisSampahList as $js)
-                                                                                            <option value="{{ $js->jenis_sampah_id }}" {{ $detail->jenis_sampah_id == $js->jenis_sampah_id ? 'selected' : '' }}>
-                                                                                                {{ $js->nama_jenis }} (Rp {{ number_format($js->harga_sampah) }}/kg)
-                                                                                            </option>
-                                                                                        @endforeach
-                                                                                    </select>
-                                                                                </div>
-                                                                                <div class="col-md-4">
-                                                                                    <label class="form-label mb-1 small text-muted">Berat (kg)</label>
-                                                                                    <input type="number" name="details[{{ $index }}][berat]" class="form-control"
-                                                                                        placeholder="0.00" step="0.01" min="0.01" value="{{ $detail->berat }}">
-                                                                                </div>
-                                                                                <div class="col-md-1 text-end">
-                                                                                    <button type="button" class="btn btn-danger btn-remove-item" title="Hapus item" onclick="this.closest('.sampah-item-row').remove()">
-                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                                                                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 1 1 0V6z"/>
-                                                                                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                                                                                        </svg>
-                                                                                    </button>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    @endforeach
-                                                                @else
-                                                                    <div class="sampah-item-row">
-                                                                        <div class="row g-3 align-items-end">
-                                                                            <div class="col-md-7">
-                                                                                <label class="form-label mb-1 small text-muted">Jenis Sampah</label>
-                                                                                <select name="details[0][jenis_sampah_id]" class="form-select">
-                                                                                    <option value="">Pilih Jenis Sampah</option>
-                                                                                    @foreach($jenisSampahList as $js)
-                                                                                        <option value="{{ $js->jenis_sampah_id }}">
-                                                                                            {{ $js->nama_jenis }} (Rp {{ number_format($js->harga_sampah) }}/kg)
-                                                                                        </option>
-                                                                                    @endforeach
-                                                                                </select>
-                                                                            </div>
-                                                                            <div class="col-md-4">
-                                                                                <label class="form-label mb-1 small text-muted">Berat (kg)</label>
-                                                                                <input type="number" name="details[0][berat]" class="form-control"
-                                                                                    placeholder="0.00" step="0.01" min="0.01">
-                                                                            </div>
-                                                                            <div class="col-md-1 text-end">
-                                                                                <button type="button" class="btn btn-danger btn-remove-item" title="Hapus item" onclick="this.closest('.sampah-item-row').remove()">
-                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                                                                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 1 1 0V6z"/>
-                                                                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                                                                                    </svg>
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-
-                                                            <div class="alert alert-info mt-3 mb-0">
-                                                                <small><strong>Info:</strong> Klik “Tambah Item” untuk menambah baris sampah lain.</small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <script>
-                                        let sampahRowIndex{{ $transaksi->transaksi_id }} = {{ $transaksi->details->count() > 0 ? $transaksi->details->count() : 1 }};
-                                        
-                                        function addSampahRow{{ $transaksi->transaksi_id }}() {
-                                            const container = document.getElementById('sampahContainer{{ $transaksi->transaksi_id }}');
-                                            const newRow = `
-                                                <div class="sampah-item-row">
-                                                    <div class="row g-3 align-items-end">
-                                                        <div class="col-md-7">
-                                                            <label class="form-label mb-1 small text-muted">Jenis Sampah</label>
-                                                            <select name="details[${sampahRowIndex{{ $transaksi->transaksi_id }}}][jenis_sampah_id]" class="form-select">
-                                                                <option value="">Pilih Jenis Sampah</option>
-                                                                @foreach($jenisSampahList as $js)
-                                                                    <option value="{{ $js->jenis_sampah_id }}">
-                                                                        {{ $js->nama_jenis }} (Rp {{ number_format($js->harga_sampah) }}/kg)
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <label class="form-label mb-1 small text-muted">Berat (kg)</label>
-                                                            <input type="number" name="details[${sampahRowIndex{{ $transaksi->transaksi_id }}}][berat]" class="form-control"
-                                                                placeholder="0.00" step="0.01" min="0.01">
-                                                        </div>
-                                                        <div class="col-md-1 text-end">
-                                                            <button type="button" class="btn btn-danger btn-remove-item" title="Hapus item" onclick="this.closest('.sampah-item-row').remove()">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                                                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                                                                </svg>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            `;
-                                            container.insertAdjacentHTML('beforeend', newRow);
-                                            sampahRowIndex{{ $transaksi->transaksi_id }}++;
-                                        }
-                                    </script>
                                 @empty
                                     <tr>
                                         <td colspan="7" class="text-center py-5">
@@ -379,6 +196,151 @@
                 </div>
             </div>
 
+            @foreach ($transaksis as $transaksi)
+                <!-- Modal Update -->
+                <div class="modal fade" id="updateModal{{ $transaksi->transaksi_id }}" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <form action="{{ route('petugas.update', $transaksi->transaksi_id) }}" method="POST" id="updateForm{{ $transaksi->transaksi_id }}">
+                                @csrf
+                                @method('PUT')
+
+                                <div class="modal-header">
+                                    <div>
+                                        <h5 class="modal-title mb-1">Update Penjemputan</h5>
+                                        <small class="text-muted">Transaksi #{{ $transaksi->transaksi_id }}</small>
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="section-card mb-3">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="meta-label">Nasabah</div>
+                                                <div class="meta-value">{{ $transaksi->user->name }}</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="meta-label">Tanggal</div>
+                                                <div class="meta-value">{{ \Carbon\Carbon::parse($transaksi->tanggal_transaksi)->format('d F Y') }}</div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="meta-label">Alamat</div>
+                                                <div class="meta-value">{{ $transaksi->alamat_penjemputan }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="section-card mb-3">
+                                        <div class="sampah-header mb-2">
+                                            <div>
+                                                <h6 class="mb-1 fw-semibold">Status Penjemputan</h6>
+                                                <small class="text-muted">Perbarui progres penjemputan sesuai kondisi lapangan.</small>
+                                            </div>
+                                        </div>
+                                        <select name="status" class="form-select mt-3" required>
+                                            <option value="Menunggu Petugas" {{ $transaksi->status == 'Menunggu Petugas' ? 'selected' : '' }}>Menunggu Petugas</option>
+                                            <option value="Menuju Lokasi" {{ $transaksi->status == 'Menuju Lokasi' ? 'selected' : '' }}>Menuju Lokasi</option>
+                                            <option value="Sedang Diangkut" {{ $transaksi->status == 'Sedang Diangkut' ? 'selected' : '' }}>Sedang Diangkut</option>
+                                            <option value="Selesai" {{ $transaksi->status == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="section-card">
+                                        <div class="sampah-header mb-2">
+                                            <div>
+                                                <h6 class="mb-1 fw-semibold">Jenis Sampah & Berat</h6>
+                                                <small class="text-muted">Tambahkan satu atau lebih item sampah yang berhasil diambil.</small>
+                                            </div>
+                                            <button type="button" class="btn btn-sm btn-success d-inline-flex align-items-center gap-1" onclick="addSampahRow({{ $transaksi->transaksi_id }})">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                                </svg>
+                                                Tambah Item
+                                            </button>
+                                        </div>
+                                        <small class="text-muted d-block mb-3">Berat dapat berupa desimal, misalnya 0.50 kg atau 1.25 kg.</small>
+
+                                        <div id="sampahContainer{{ $transaksi->transaksi_id }}" data-next-index="{{ $transaksi->details->isNotEmpty() ? $transaksi->details->count() : 0 }}">
+                                            @if($transaksi->details->isNotEmpty())
+                                                @foreach($transaksi->details as $index => $detail)
+                                                    <div class="sampah-item-row">
+                                                        <div class="row g-3 align-items-end">
+                                                            <div class="col-md-7">
+                                                                <label class="form-label mb-1 small text-muted">Jenis Sampah</label>
+                                                                <select name="details[{{ $index }}][jenis_sampah_id]" class="form-select">
+                                                                    <option value="">Pilih Jenis Sampah</option>
+                                                                    @foreach($jenisSampahList as $js)
+                                                                        <option value="{{ $js->jenis_sampah_id }}" {{ $detail->jenis_sampah_id == $js->jenis_sampah_id ? 'selected' : '' }}>
+                                                                            {{ $js->nama_jenis }} (Rp {{ number_format($js->harga_sampah) }}/kg)
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label mb-1 small text-muted">Berat (kg)</label>
+                                                                <input type="number" name="details[{{ $index }}][berat]" class="form-control"
+                                                                    placeholder="0.00" step="0.01" min="0.01" value="{{ $detail->berat }}">
+                                                            </div>
+                                                            <div class="col-md-1 text-end">
+                                                                <button type="button" class="btn btn-danger btn-remove-item" title="Hapus item" onclick="this.closest('.sampah-item-row').remove()">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 1 1 0V6z"/>
+                                                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <div class="sampah-item-row">
+                                                    <div class="row g-3 align-items-end">
+                                                        <div class="col-md-7">
+                                                            <label class="form-label mb-1 small text-muted">Jenis Sampah</label>
+                                                            <select name="details[0][jenis_sampah_id]" class="form-select">
+                                                                <option value="">Pilih Jenis Sampah</option>
+                                                                @foreach($jenisSampahList as $js)
+                                                                    <option value="{{ $js->jenis_sampah_id }}">
+                                                                        {{ $js->nama_jenis }} (Rp {{ number_format($js->harga_sampah) }}/kg)
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label mb-1 small text-muted">Berat (kg)</label>
+                                                            <input type="number" name="details[0][berat]" class="form-control"
+                                                                placeholder="0.00" step="0.01" min="0.01">
+                                                        </div>
+                                                        <div class="col-md-1 text-end">
+                                                            <button type="button" class="btn btn-danger btn-remove-item" title="Hapus item" onclick="this.closest('.sampah-item-row').remove()">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 0-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 0-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 1 1 0V6z"/>
+                                                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        <div class="alert alert-info mt-3 mb-0">
+                                            <small><strong>Info:</strong> Klik “Tambah Item” untuk menambah baris sampah lain.</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+
             @if($transaksis->hasPages())
                 <div class="mt-3">
                     {{ $transaksis->links() }}
@@ -386,4 +348,63 @@
             @endif
         </div>
     </div>
+
+    <script>
+        window.addSampahRow = function(transaksiId) {
+            const container = document.getElementById(`sampahContainer${transaksiId}`);
+
+            if (!container) {
+                return;
+            }
+
+            const nextIndex = parseInt(container.dataset.nextIndex || '0', 10);
+            const jenisSampahOptions = @json($jenisSampahList->map(function ($js) {
+                return [
+                    'id' => $js->jenis_sampah_id,
+                    'label' => $js->nama_jenis . ' (Rp ' . number_format($js->harga_sampah) . '/kg)',
+                ];
+            })->values());
+
+            const escapeHtml = (value) => String(value)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+
+            const optionsHtml = jenisSampahOptions.map((item) => {
+                return `<option value="${escapeHtml(item.id)}">${escapeHtml(item.label)}</option>`;
+            }).join('');
+
+            const newRow = `
+                <div class="sampah-item-row">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-7">
+                            <label class="form-label mb-1 small text-muted">Jenis Sampah</label>
+                            <select name="details[${nextIndex}][jenis_sampah_id]" class="form-select">
+                                <option value="">Pilih Jenis Sampah</option>
+                                ${optionsHtml}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label mb-1 small text-muted">Berat (kg)</label>
+                            <input type="number" name="details[${nextIndex}][berat]" class="form-control"
+                                placeholder="0.00" step="0.01" min="0.01">
+                        </div>
+                        <div class="col-md-1 text-end">
+                            <button type="button" class="btn btn-danger btn-remove-item" title="Hapus item" onclick="this.closest('.sampah-item-row').remove()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 1 1 0V6z"/>
+                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', newRow);
+            container.dataset.nextIndex = String(nextIndex + 1);
+        };
+    </script>
 </x-app-layout>

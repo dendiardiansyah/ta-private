@@ -29,30 +29,36 @@ class PetugasTransaksiController extends Controller
 
     public function update(Request $request, $transaksi_id)
     {
-        // Filter details array to only include rows with non-empty jenis_sampah_id and berat
-        $detailsArray = [];
-        if ($request->has('details') && is_array($request->details)) {
-            foreach ($request->details as $detail) {
-                if (!empty($detail['jenis_sampah_id']) && !empty($detail['berat'])) {
-                    $detailsArray[] = $detail;
-                }
-            }
-        }
-
-        $request->merge(['details_filtered' => $detailsArray]);
-
-        $request->validate([
+        $validated = $request->validate([
             'status' => 'required|in:Menunggu Petugas,Menuju Lokasi,Sedang Diangkut,Selesai',
-            'details_filtered' => 'nullable|array',
-            'details_filtered.*.jenis_sampah_id' => 'required|exists:jenis_sampah,jenis_sampah_id',
-            'details_filtered.*.berat' => 'required|numeric|min:0.01|max:999999.99',
-        ], [
-            'details_filtered.*.jenis_sampah_id.required' => 'Jenis sampah harus dipilih untuk setiap item.',
-            'details_filtered.*.jenis_sampah_id.exists' => 'Jenis sampah yang dipilih tidak valid.',
-            'details_filtered.*.berat.required' => 'Berat harus diisi untuk setiap item.',
-            'details_filtered.*.berat.min' => 'Berat minimal 0.01 kg untuk setiap item.',
-            'details_filtered.*.berat.numeric' => 'Berat harus berupa angka untuk setiap item.',
         ]);
+
+        $validJenisSampahIds = JenisSampah::pluck('jenis_sampah_id')->all();
+
+        // Ambil hanya baris detail yang benar-benar valid.
+        // Ini mencegah satu row kosong/aneh menggagalkan seluruh submit.
+        $details = [];
+        foreach ((array) $request->input('details', []) as $detail) {
+            $jenisSampahId = $detail['jenis_sampah_id'] ?? null;
+            $berat = $detail['berat'] ?? null;
+
+            if ($jenisSampahId === null || $jenisSampahId === '' || $berat === null || $berat === '') {
+                continue;
+            }
+
+            if (!is_numeric($jenisSampahId) || !is_numeric($berat) || (float) $berat < 0.01) {
+                continue;
+            }
+
+            if (!in_array((int) $jenisSampahId, $validJenisSampahIds, true)) {
+                continue;
+            }
+
+            $details[] = [
+                'jenis_sampah_id' => (int) $jenisSampahId,
+                'berat' => number_format((float) $berat, 2, '.', ''),
+            ];
+        }
 
         $transaksi = Transaksi::with(['user', 'details'])->findOrFail($transaksi_id);
 
@@ -70,22 +76,22 @@ class PetugasTransaksiController extends Controller
         $statusBaru = $request->status;
 
         // Jika status diubah ke "Selesai", pastikan detail sudah diinput
-        if ($statusBaru === 'Selesai' && empty($request->details_filtered)) {
+        if ($statusBaru === 'Selesai' && empty($details)) {
             return redirect()->back()->with('error', 'Mohon input jenis sampah dan berat sebelum menyelesaikan transaksi.');
         }
 
-        DB::transaction(function () use ($request, $transaksi, $statusLama, $statusBaru) {
+        DB::transaction(function () use ($details, $transaksi, $statusLama, $statusBaru) {
             // Update status
             $transaksi->status = $statusBaru;
             $transaksi->save();
 
             // Jika ada detail yang diinput, simpan atau update
-            if (!empty($request->details_filtered)) {
+            if (!empty($details)) {
                 // Hapus detail lama jika ada
                 $transaksi->details()->delete();
 
                 // Simpan detail baru dari validated/filtered data
-                foreach ($request->details_filtered as $detail) {
+                foreach ($details as $detail) {
                     TransaksiDetail::create([
                         'transaksi_id' => $transaksi->transaksi_id,
                         'jenis_sampah_id' => $detail['jenis_sampah_id'],
